@@ -3,6 +3,7 @@ package com.lvucko.cookshare.controllers;
 
 import com.lvucko.cookshare.dto.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<UserDetailsDto>> getUsers()
         throws SQLException {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -26,6 +27,13 @@ public class UserController {
     public ResponseEntity<UserDetailsDto> getUser(@PathVariable("id") Long userId)
         throws SQLException {
         return ResponseEntity.ok(userService.getUserById(userId));
-
+    }
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("username") String username)
+        throws SQLException {
+        if (username.contains("@")){
+            return ResponseEntity.ok(userService.getUserByEmail(username));
+        }
+        return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 }
