@@ -5,10 +5,7 @@ import com.lvucko.cookshare.dto.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.lvucko.cookshare.services.UserService;
 
 import java.sql.SQLException;
@@ -24,5 +21,11 @@ public class UserController {
     public ResponseEntity<List<UserDetailsDto>> getUsers()
         throws SQLException {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("id") Long userId)
+        throws SQLException {
+        return ResponseEntity.ok(userService.getUserById(userId));
+
     }
 }

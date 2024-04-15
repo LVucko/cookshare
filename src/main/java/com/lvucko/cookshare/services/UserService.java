@@ -21,4 +21,16 @@ public class UserService {
         users.forEach(user ->userDetailsDtos.add(userMapper.mapToDetails(user)));
         return  userDetailsDtos;
     }
+    public UserDetailsDto getUserById(long id){
+        User user = userDao.getUserById(id);
+        return userMapper.mapToDetails(user);
+    }
+    public UserDetailsDto getUserByEmail(String email){
+        User user = userDao.getUserByEmail(email);
+        return userMapper.mapToDetails(user);
+    }
+    public UserDetailsDto getUserByUsername(String username){
+        User user = userDao.getUserByUsername(username);
+        return userMapper.mapToDetails(user);
+    }
 }
