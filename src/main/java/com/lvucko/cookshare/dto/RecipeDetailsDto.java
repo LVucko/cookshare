@@ -12,7 +12,7 @@ import java.util.List;
 public class RecipeDetailsDto {
     private long id;
     private long userId;
-    private long username;
+    private String username;
     private String title;
     private String shortDescription;
     private String longDescription;

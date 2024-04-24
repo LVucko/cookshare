@@ -22,13 +22,13 @@ public class RecipeDao {
         String sql = """
                      SELECT * FROM recipes
                      """;
-        return jdbcTemplate.query(sql, recipeRowMapper);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class));
     }
     public Recipe getRecipeById(long recipeId){
         String sql = """
                     SELECT * FROM recipes where recipes.id = ?
-                """;
-        return jdbcTemplate.queryForObject(sql, recipeRowMapper, recipeId);
+                    """;
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Recipe.class), recipeId);
     }
     public List<Picture>getRecipePictures(long recipeId){
         String sql = """

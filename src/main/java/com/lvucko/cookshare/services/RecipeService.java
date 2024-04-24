@@ -1,6 +1,7 @@
 package com.lvucko.cookshare.services;
 
 import com.lvucko.cookshare.dao.RecipeDao;
+import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.mappers.RecipeMapper;
 import com.lvucko.cookshare.models.Category;
@@ -17,6 +18,8 @@ import java.util.List;
 public class RecipeService {
     private final RecipeDao recipeDao;
     private final RecipeMapper recipeMapper;
+    private final UserDao userDao;
+
     public List<RecipeDetailsDto> getAllRecipes(){
         List<Recipe> recipes = recipeDao.getAllRecipes();
         List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
@@ -31,8 +34,9 @@ public class RecipeService {
             for(Category category: categories){
                 validCategories.add(category.getCategoryName());
             }
-            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, pathToPictures, validCategories));
+            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), pathToPictures, validCategories));
         }
         return recipeDetailsDtos;
     }
+    
 }

@@ -1,7 +1,6 @@
 package com.lvucko.cookshare.mappers.rowMappers;
 
 import com.lvucko.cookshare.models.Recipe;
-import com.lvucko.cookshare.models.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

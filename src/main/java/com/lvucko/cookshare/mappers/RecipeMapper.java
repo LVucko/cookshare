@@ -2,16 +2,18 @@ package com.lvucko.cookshare.mappers;
 
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.models.Recipe;
+import com.lvucko.cookshare.models.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class RecipeMapper {
-    public RecipeDetailsDto mapToDetails(Recipe recipe, List<String> pathToPicture, List<String> categories){
+    public RecipeDetailsDto mapToDetails(Recipe recipe, User user, List<String> pathToPicture, List<String> categories){
         return RecipeDetailsDto.builder()
                 .id(recipe.getId())
                 .userId(recipe.getUserId())
+                .username(user.getUsername())
                 .title(recipe.getTitle())
                 .shortDescription(recipe.getShortDescription())
                 .longDescription(recipe.getLongDescription())
