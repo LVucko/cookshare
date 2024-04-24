@@ -5,6 +5,7 @@ import com.lvucko.cookshare.dto.UserRegistrationDto;
 import lombok.RequiredArgsConstructor;
 import com.lvucko.cookshare.mappers.rowMappers.UserRowMapper;
 import com.lvucko.cookshare.models.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class UserDao {
         String sql = """
                      SELECT * FROM users
                      """;
-        return jdbcTemplate.query(sql, userRowMapper);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
     public User getUserById(long userId){
         String sql = """

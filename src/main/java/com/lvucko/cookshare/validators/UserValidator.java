@@ -22,11 +22,9 @@ public class UserValidator {
         Matcher matcher = VALID_PHONE_REGEX.matcher(phone);
         return matcher.matches();
     }
-
     public static boolean isValidEmail(String emailStr) {
         Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.matches();
     }
-
 }
