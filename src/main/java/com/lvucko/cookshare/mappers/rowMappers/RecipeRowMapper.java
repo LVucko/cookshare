@@ -15,6 +15,7 @@ public class RecipeRowMapper implements RowMapper<Recipe> {
             return Recipe.builder()
                     .id(resultSet.getLong("id"))
                     .userId(resultSet.getLong("userId"))
+                    .creationDate(resultSet.getDate("creationDate"))
                     .title(resultSet.getString("title"))
                     .shortDescription(resultSet.getString("shortDescription"))
                     .longDescription(resultSet.getString("longDescription"))

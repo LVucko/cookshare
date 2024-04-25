@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecipeDao {
     private final JdbcTemplate jdbcTemplate;
-    private final RecipeRowMapper recipeRowMapper;
     public List<Recipe> getAllRecipes(){
         String sql = """
                      SELECT * FROM recipes
@@ -26,36 +25,8 @@ public class RecipeDao {
     }
     public Recipe getRecipeById(long recipeId){
         String sql = """
-                    SELECT * FROM recipes where recipes.id = ?
+                    SELECT * FROM recipes WHERE recipes.id = ?
                     """;
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Recipe.class), recipeId);
-    }
-    public List<Picture>getRecipePictures(long recipeId){
-        String sql = """
-                    SELECT * FROM pictures where pictures.recipeId = ?
-                    """;
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Picture.class));
-    }
-    public List<Category> getAllCategories(){
-        String sql = """
-                    SELECT * FROM categories
-                    """;
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
-    }
-    public boolean isCategory(String category, long recipeId){
-        String sql = """
-                    SELECT EXISTS(SELECT * FROM ? WHERE ?.recipeID = ?)
-                    """;
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, category, category, recipeId));
-    }
-    public List<Category>getRecipeCategories(long recipeId){
-        List<Category> allCategories = getAllCategories();
-        List<Category> recipeCategories = new ArrayList<>();
-        for(Category category : allCategories){
-            if(isCategory(category.getCategoryName(), recipeId)){
-                recipeCategories.add(category);
-            }
-        }
-        return recipeCategories;
     }
 }

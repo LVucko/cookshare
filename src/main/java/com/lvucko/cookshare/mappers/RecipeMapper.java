@@ -15,6 +15,7 @@ public class RecipeMapper {
                 .userId(recipe.getUserId())
                 .username(user.getUsername())
                 .title(recipe.getTitle())
+                .creationDate(recipe.getCreationDate())
                 .shortDescription(recipe.getShortDescription())
                 .longDescription(recipe.getLongDescription())
                 .pathToPictures(pathToPicture)

@@ -2,7 +2,7 @@ package com.lvucko.cookshare.models;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -12,6 +12,7 @@ import java.util.List;
 public class Recipe {
     private long id;
     private long userId;
+    private Date creationDate;
     private String title;
     private String shortDescription;
     private String longDescription;

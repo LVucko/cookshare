@@ -3,7 +3,6 @@ package com.lvucko.cookshare.controllers;
 import com.lvucko.cookshare.dto.UserDetailsDto;
 import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
-import com.lvucko.cookshare.models.User;
 import com.lvucko.cookshare.validators.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
