@@ -17,19 +17,27 @@ import java.util.List;
 public class RecipeController {
     private final RecipeService recipeService;
     @GetMapping("/all")
-    public ResponseEntity<List<RecipeDetailsDto>> getRecipes()
-            throws SQLException {
+    public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
         return ResponseEntity.ok(recipeService.getAllRecipes());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("id") Long recipeId)
-            throws SQLException {
+    public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("id") Long recipeId) throws SQLException {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
     }
     @PostMapping("/new")
-    public ResponseEntity<String> addNewRecipe(@RequestBody RecipeCreationDto recipe) throws SQLException{
-        recipeService.addNewRecipe(recipe);
-        return ResponseEntity.ok("ah");
+    public ResponseEntity<Long> addNewRecipe(@RequestBody RecipeCreationDto recipe) throws SQLException{
+        return ResponseEntity.ok(recipeService.addNewRecipe(recipe));
     }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> removeRecipe(@PathVariable("id") Long recipeId) throws  SQLException{
+        recipeService.removeRecipe(recipeId);
+        return ResponseEntity.ok("deleted");
+    }
+    @PutMapping("/update")
+    public ResponseEntity<String> updateRecipe(@RequestBody RecipeDetailsDto recipe) throws SQLException{
+        recipeService.updateRecipe(recipe);
+        return ResponseEntity.ok("updated");
+    }
+
 
 }

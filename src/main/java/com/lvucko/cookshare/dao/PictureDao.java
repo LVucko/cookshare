@@ -34,4 +34,11 @@ public class PictureDao {
                     """;
         jdbcTemplate.update(sql, recipeId, pathToPicture);
     }
+    public void removeRecipeFromPictures(long recipeId){
+        String sql = """
+                    DELETE FROM pictures WHERE recipeId = ?
+                    """;
+        jdbcTemplate.update(sql, recipeId);
+    }
+
 }

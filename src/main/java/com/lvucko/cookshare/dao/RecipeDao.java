@@ -1,6 +1,7 @@
 package com.lvucko.cookshare.dao;
 
 import com.lvucko.cookshare.dto.RecipeCreationDto;
+import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.models.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,5 +33,22 @@ public class RecipeDao {
                     RETURNING id
                     """;
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(1), recipe.getUserId(), recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription());
+    }
+
+    public void removeRecipe(long recipeId) {
+        String sql = """
+                    DELETE FROM recipes WHERE recipes.id = ?
+                    """;
+        jdbcTemplate.update(sql, recipeId);
+    }
+    public void updateRecipe(RecipeDetailsDto recipe){
+        String sql = """
+                    UPDATE recipes
+                    SET title = ?,
+                    shortDescription = ?,
+                    longDescription  = ?
+                    WHERE id = ?;
+                    """;
+        jdbcTemplate.update(sql, recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription(), recipe.getId());
     }
 }
