@@ -1,14 +1,12 @@
 package com.lvucko.cookshare.controllers;
 
+import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.services.RecipeService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,4 +26,10 @@ public class RecipeController {
             throws SQLException {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
     }
+    @PostMapping("/new")
+    public ResponseEntity<String> addNewRecipe(@RequestBody RecipeCreationDto recipe) throws SQLException{
+        recipeService.addNewRecipe(recipe);
+        return ResponseEntity.ok("ah");
+    }
+
 }

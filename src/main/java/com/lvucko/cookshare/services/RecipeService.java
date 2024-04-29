@@ -4,6 +4,7 @@ import com.lvucko.cookshare.dao.CategoryDao;
 import com.lvucko.cookshare.dao.PictureDao;
 import com.lvucko.cookshare.dao.RecipeDao;
 import com.lvucko.cookshare.dao.UserDao;
+import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.mappers.RecipeMapper;
 import com.lvucko.cookshare.models.Recipe;
@@ -38,5 +39,16 @@ public class RecipeService {
         List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
         return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories);
     }
+    public void addNewRecipe(RecipeCreationDto recipe){
+        long recipeId = recipeDao.addNewRecipe(recipe);
+        List <String> categories = recipe.getCategories();
+        List <String> pathToPictures = recipe.getPathToPictures();
+        for(String category : categories){
+            categoryDao.addRecipeToCategory(recipeId, category);
+        }
+        for(String pathToPicture : pathToPictures){
+            pictureDao.addRecipeToPicture(recipeId, pathToPicture);
+        }
 
+    }
 }

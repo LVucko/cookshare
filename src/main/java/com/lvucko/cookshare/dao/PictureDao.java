@@ -27,4 +27,11 @@ public class PictureDao {
         }
         return pathToPictures;
     }
+
+    public void addRecipeToPicture(long recipeId, String pathToPicture) {
+        String sql = """
+                    INSERT INTO pictures (recipeId, pathToPicture) VALUES (?,?)
+                    """;
+        jdbcTemplate.update(sql, recipeId, pathToPicture);
+    }
 }

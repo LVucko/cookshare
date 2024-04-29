@@ -1,6 +1,7 @@
 package com.lvucko.cookshare.dao;
 
 import com.lvucko.cookshare.models.Category;
+import com.lvucko.cookshare.services.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +21,8 @@ public class CategoryDao {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
     }
     public boolean hasRecipeCategory(long recipeId, String category){
+        //String sql = "SELECT EXISTS(SELECT * FROM ? WHERE ?.recipeId = ?);";
+        //return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, category, category, recipeId));
         String sql = "SELECT EXISTS(SELECT * FROM "+category+" WHERE "+category+".recipeId = ?);";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, recipeId));
     }
@@ -48,5 +51,9 @@ public class CategoryDao {
             categoriesString.add(category.getCategoryName());
         }
         return categoriesString;
+    }
+    public void addRecipeToCategory(long recipeId, String category){
+        String sql = " INSERT INTO "+category+" VALUES(?)";
+        jdbcTemplate.update(sql, recipeId);
     }
 }

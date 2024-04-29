@@ -1,16 +1,12 @@
 package com.lvucko.cookshare.dao;
 
-import com.lvucko.cookshare.mappers.rowMappers.RecipeRowMapper;
-import com.lvucko.cookshare.models.Category;
-import com.lvucko.cookshare.models.Picture;
+import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.models.Recipe;
-import com.lvucko.cookshare.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -28,5 +24,13 @@ public class RecipeDao {
                     SELECT * FROM recipes WHERE recipes.id = ?
                     """;
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Recipe.class), recipeId);
+    }
+    public long addNewRecipe(RecipeCreationDto recipe){
+        String sql = """
+                    INSERT INTO recipes(userId, creationDate, title, shortDescription, longDescription)
+                    VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)
+                    RETURNING id
+                    """;
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(1), recipe.getUserId(), recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription());
     }
 }
