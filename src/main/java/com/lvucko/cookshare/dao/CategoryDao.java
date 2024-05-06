@@ -19,9 +19,9 @@ public class CategoryDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
     }
+
     public boolean hasRecipeCategory(long recipeId, String category){
-        //String sql = "SELECT EXISTS(SELECT * FROM ? WHERE ?.recipeId = ?);";
-        //return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, category, category, recipeId));
+
         String sql = "SELECT EXISTS(SELECT * FROM "+category+" WHERE "+category+".recipeId = ?);";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, recipeId));
     }
@@ -45,24 +45,36 @@ public class CategoryDao {
         }
         return categoriesString;
     }
+
     public void addRecipeToCategory(long recipeId, String category){
         String sql = " INSERT INTO "+category+" VALUES(?)";
         jdbcTemplate.update(sql, recipeId);
     }
+
     public void removeRecipeFromCategory(long recipeId, String category){
         String sql = "DELETE FROM "+category+" WHERE "+category+".recipeId = ?;";
         jdbcTemplate.update(sql, recipeId);
     }
-    public void deleteCategory(String category){
+
+    public void deleteCategory(Category category){
         String sql = """
                     DELETE FROM categories WHERE categories.categoryName = ?
                     """;
-        jdbcTemplate.update(sql, category);
+        jdbcTemplate.update(sql, category.getCategoryName());
     }
-    public void dropCategory(String category){
-        String sql = """
-                    DROP TABLE ?
+
+    public void dropCategory(Category category){
+        String sql = "DROP TABLE "+category.getCategoryName();
+        jdbcTemplate.update(sql);
+    }
+    public void addCategory(Category category){
+        String sql ="""
+                    INSERT INTO categories VALUES(?, ?)
                     """;
-        jdbcTemplate.update(sql, category);
+        jdbcTemplate.update(sql, category.getCategoryName(), category.getCategoryDescription());
+    }
+    public void createCategory(Category category){
+        String sql ="CREATE TABLE "+category.getCategoryName()+"( recipeId INTEGER references recipes(id))";
+        jdbcTemplate.update(sql);
     }
 }

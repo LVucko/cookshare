@@ -1,6 +1,5 @@
 package com.lvucko.cookshare.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.UserDetailsDto;
 import com.lvucko.cookshare.dto.UserLoginDto;

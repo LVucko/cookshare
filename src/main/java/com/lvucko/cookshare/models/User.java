@@ -1,7 +1,5 @@
 package com.lvucko.cookshare.models;
 
-
-import jdk.jshell.Snippet;
 import lombok.*;
 
 import java.util.Date;

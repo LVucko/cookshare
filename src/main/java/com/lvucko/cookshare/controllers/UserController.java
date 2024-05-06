@@ -19,18 +19,15 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     @GetMapping("/all")
-    public ResponseEntity<List<UserDetailsDto>> getUsers()
-        throws SQLException {
+    public ResponseEntity<List<UserDetailsDto>> getUsers() throws SQLException {
         return ResponseEntity.ok(userService.getAllUsers());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("id") Long userId)
-        throws SQLException {
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("id") Long userId) throws SQLException {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
     @GetMapping("/{username}")
-    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("username") String username)
-        throws SQLException {
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable("username") String username) throws SQLException {
         if (username.contains("@")){
             return ResponseEntity.ok(userService.getUserByEmail(username));
         }

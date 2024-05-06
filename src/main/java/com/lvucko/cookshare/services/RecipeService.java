@@ -7,6 +7,7 @@ import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.mappers.RecipeMapper;
+import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.models.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,13 @@ public class RecipeService {
             categoryDao.addRecipeToCategory(recipe.getId(), category);
         }
         recipeDao.updateRecipe(recipe);
+    }
+    public void addCategory(Category category){
+        categoryDao.addCategory(category);
+        categoryDao.createCategory(category);
+    }
+    public void removeCategory(Category category){
+        categoryDao.deleteCategory(category);
+        categoryDao.dropCategory(category);
     }
 }

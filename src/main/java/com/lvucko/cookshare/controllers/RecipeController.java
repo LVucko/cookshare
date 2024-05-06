@@ -2,6 +2,7 @@ package com.lvucko.cookshare.controllers;
 
 import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
+import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.RecipeService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,17 @@ public class RecipeController {
         recipeService.updateRecipe(recipe);
         return ResponseEntity.ok("updated");
     }
+    @PostMapping("/category")
+    public ResponseEntity<String> createCategory(@RequestBody Category category) throws SQLException{
+        recipeService.addCategory(category);
+        return ResponseEntity.ok("added new category");
+    }
+    @DeleteMapping("/category/delete")
+    public ResponseEntity<String> deleteCategory(@RequestBody Category category) throws SQLException{
+        recipeService.removeCategory(category);
+        return ResponseEntity.ok("removed category");
+    }
+
 
 
 }
