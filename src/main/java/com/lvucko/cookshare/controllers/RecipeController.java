@@ -36,20 +36,7 @@ public class RecipeController {
     }
     @PutMapping("/update")
     public ResponseEntity<String> updateRecipe(@RequestBody RecipeDetailsDto recipe) throws SQLException{
-        recipeService.updateRecipe(recipe);
+        //recipeService.updateRecipe(recipe);
         return ResponseEntity.ok("updated");
     }
-    @PostMapping("/category")
-    public ResponseEntity<String> createCategory(@RequestBody Category category) throws SQLException{
-        recipeService.addCategory(category);
-        return ResponseEntity.ok("added new category");
-    }
-    @DeleteMapping("/category/delete")
-    public ResponseEntity<String> deleteCategory(@RequestBody Category category) throws SQLException{
-        recipeService.removeCategory(category);
-        return ResponseEntity.ok("removed category");
-    }
-
-
-
 }

@@ -1,5 +1,6 @@
 package com.lvucko.cookshare.dto;
 
+import com.lvucko.cookshare.models.Category;
 import lombok.*;
 
 import java.util.List;
@@ -14,6 +15,6 @@ public class RecipeCreationDto {
     private String title;
     private String shortDescription;
     private String longDescription;
-    private List<String> categories;
+    private List<Long> categories;
     private List<String> pathToPictures;
 }

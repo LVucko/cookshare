@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Category {
-    String categoryName;
-    String categoryDescription;
+    long id;
+    String name;
 }

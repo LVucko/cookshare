@@ -42,10 +42,10 @@ public class RecipeService {
     }
     public long addNewRecipe(RecipeCreationDto recipe){
         long recipeId = recipeDao.addNewRecipe(recipe);
-        List <String> categories = recipe.getCategories();
+        List <Long> categoryIds = recipe.getCategories();
         List <String> pathToPictures = recipe.getPathToPictures();
-        for(String category : categories){
-            categoryDao.addRecipeToCategory(recipeId, category);
+        for(Long categoryId : categoryIds){
+            categoryDao.addRecipeToCategory(recipeId, categoryId);
         }
         for(String pathToPicture : pathToPictures){
             pictureDao.addRecipeToPicture(recipeId, pathToPicture);
@@ -54,19 +54,13 @@ public class RecipeService {
 
     }
     public void removeRecipe(long recipeId){
-        List<String> categories = categoryDao.getRecipeCategoriesAsString(recipeId);
-        for(String category: categories){
-            categoryDao.removeRecipeFromCategory(recipeId, category);
-        }
+        categoryDao.removeRecipeFromAllCategories(recipeId);
         pictureDao.removeRecipeFromPictures(recipeId);
         recipeDao.removeRecipe(recipeId);
     }
-    public void updateRecipe(RecipeDetailsDto recipe){
+    /*public void updateRecipe(RecipeDetailsDto recipe){
         pictureDao.removeRecipeFromPictures(recipe.getId());
-        List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
-        for(String category: categories){
-            categoryDao.removeRecipeFromCategory(recipe.getId(), category);
-        }
+        categoryDao.removeRecipeFromAllCategories(recipe.getId());
         List <String> pathToPictures = recipe.getPathToPictures();
         for(String pathToPicture : pathToPictures){
             pictureDao.addRecipeToPicture(recipe.getId(), pathToPicture);
@@ -76,13 +70,5 @@ public class RecipeService {
             categoryDao.addRecipeToCategory(recipe.getId(), category);
         }
         recipeDao.updateRecipe(recipe);
-    }
-    public void addCategory(Category category){
-        categoryDao.addCategory(category);
-        categoryDao.createCategory(category);
-    }
-    public void removeCategory(Category category){
-        categoryDao.deleteCategory(category);
-        categoryDao.dropCategory(category);
-    }
+    }*/
 }
