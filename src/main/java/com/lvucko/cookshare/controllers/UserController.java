@@ -26,7 +26,7 @@ public class UserController {
     public ResponseEntity<UserDetailsDto> getUser(@PathVariable("id") Long userId) throws SQLException {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
-    @GetMapping("/{username}")
+    @GetMapping("/u/{username}")
     public ResponseEntity<UserDetailsDto> getUser(@PathVariable("username") String username) throws SQLException {
         if (username.contains("@")){
             return ResponseEntity.ok(userService.getUserByEmail(username));

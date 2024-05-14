@@ -21,9 +21,17 @@ public class RecipeController {
     public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
         return ResponseEntity.ok(recipeService.getAllRecipes());
     }
+    @GetMapping("/latest")
+    public ResponseEntity<List<RecipeDetailsDto>> getLatestRecipes() throws SQLException {
+        return ResponseEntity.ok(recipeService.getMostRecentRecipes(10));
+    }
     @GetMapping("/{id}")
     public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("id") Long recipeId) throws SQLException {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
+    }
+    @GetMapping("/userrecipes/{id}")
+    public ResponseEntity<List<RecipeDetailsDto>> getRecipesFromUser(@PathVariable("id") Long userId) throws SQLException{
+        return ResponseEntity.ok(recipeService.getAllUserRecipes(userId));
     }
     @PostMapping("/new")
     public ResponseEntity<Long> addNewRecipe(@RequestBody RecipeCreationDto recipe) throws SQLException{

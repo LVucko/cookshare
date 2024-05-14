@@ -7,7 +7,6 @@ import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.mappers.RecipeMapper;
-import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.models.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -79,6 +78,16 @@ public class RecipeService {
         List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
         recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
     }
+        return recipeDetailsDtos;
+    }
+    public List<RecipeDetailsDto> getMostRecentRecipes(long count){
+        List<Recipe> recipes = recipeDao.getLatestRecipes(count);
+        List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
+        for(Recipe recipe : recipes){
+            List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
+            List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
+            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
+        }
         return recipeDetailsDtos;
     }
 }

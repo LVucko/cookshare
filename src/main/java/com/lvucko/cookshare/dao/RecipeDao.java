@@ -53,8 +53,14 @@ public class RecipeDao {
     }
     public List<Recipe> getAllRecipesFromUser(long userId){
         String sql = """
-                    SELECT * FROM recipes WHERE recipe.userId = ?
+                    SELECT * FROM recipes WHERE recipes.userId = ?
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), userId);
+    }
+    public List<Recipe> getLatestRecipes(long count){
+        String sql = """
+                    SELECT * FROM recipes ORDER BY id DESC LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
     }
 }
