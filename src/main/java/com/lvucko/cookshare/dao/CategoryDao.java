@@ -22,7 +22,10 @@ public class CategoryDao {
 
     public List<Category>getRecipeCategories(long recipeId){
         String sql = """
-                    SELECT categories.* from categories, recipecategories WHERE recipecategories.recipeid = ?;
+                    SELECT categories.* from categories
+                    INNER JOIN recipecategories
+                    ON  categories.id=recipecategories.categoryid
+                    WHERE recipecategories.recipeid = ?
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class), recipeId);
     }
@@ -42,6 +45,13 @@ public class CategoryDao {
                 VALUES(?, ?)
                 """;
         jdbcTemplate.update(sql, recipeId, categoryId);
+    }
+    public void addRecipeToCategory(long recipeId, String categoryName){
+        String sql = """
+                INSERT INTO recipeCategories(recipeid, categoryid)
+                VALUES(?, (SELECT id from categories where categories.name = ?))
+                """;
+        jdbcTemplate.update(sql, recipeId, categoryName);
     }
 
     public void removeRecipeFromCategory(long recipeId, long categoryId){
@@ -68,7 +78,7 @@ public class CategoryDao {
 
     public void addNewCategory(String category){
         String sql ="""
-                    INSERT INTO categories VALUES(?)
+                    INSERT INTO categories(name) VALUES(?)
                     """;
         jdbcTemplate.update(sql, category);
     }

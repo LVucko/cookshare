@@ -20,8 +20,8 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategories());
     }
     @PostMapping
-    public ResponseEntity<String> createCategory(@RequestBody String category) throws SQLException {
-        categoryService.addCategory(category);
+    public ResponseEntity<String> createCategory(@RequestBody String name) throws SQLException {
+        categoryService.addCategory(name);
         return ResponseEntity.ok("added new category");
     }
     @DeleteMapping

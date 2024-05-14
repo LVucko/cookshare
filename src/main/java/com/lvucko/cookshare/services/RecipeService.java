@@ -58,7 +58,7 @@ public class RecipeService {
         pictureDao.removeRecipeFromPictures(recipeId);
         recipeDao.removeRecipe(recipeId);
     }
-    /*public void updateRecipe(RecipeDetailsDto recipe){
+    public void updateRecipe(RecipeDetailsDto recipe){
         pictureDao.removeRecipeFromPictures(recipe.getId());
         categoryDao.removeRecipeFromAllCategories(recipe.getId());
         List <String> pathToPictures = recipe.getPathToPictures();
@@ -70,5 +70,15 @@ public class RecipeService {
             categoryDao.addRecipeToCategory(recipe.getId(), category);
         }
         recipeDao.updateRecipe(recipe);
-    }*/
+    }
+    public List<RecipeDetailsDto> getAllUserRecipes(long userId){
+    List<Recipe> recipes = recipeDao.getAllRecipesFromUser(userId);
+    List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
+        for(Recipe recipe : recipes){
+        List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
+        List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
+        recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
+    }
+        return recipeDetailsDtos;
+    }
 }

@@ -51,4 +51,10 @@ public class RecipeDao {
                     """;
         jdbcTemplate.update(sql, recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription(), recipe.getId());
     }
+    public List<Recipe> getAllRecipesFromUser(long userId){
+        String sql = """
+                    SELECT * FROM recipes WHERE recipe.userId = ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), userId);
+    }
 }

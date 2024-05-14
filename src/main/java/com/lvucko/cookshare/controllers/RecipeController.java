@@ -36,7 +36,7 @@ public class RecipeController {
     }
     @PutMapping("/update")
     public ResponseEntity<String> updateRecipe(@RequestBody RecipeDetailsDto recipe) throws SQLException{
-        //recipeService.updateRecipe(recipe);
+        recipeService.updateRecipe(recipe);
         return ResponseEntity.ok("updated");
     }
 }
