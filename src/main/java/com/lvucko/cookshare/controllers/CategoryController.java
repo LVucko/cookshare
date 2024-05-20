@@ -2,7 +2,6 @@ package com.lvucko.cookshare.controllers;
 
 import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.CategoryService;
-import com.lvucko.cookshare.services.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
