@@ -3,6 +3,8 @@ package com.lvucko.cookshare.controllers;
 import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,16 +21,14 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategories());
     }
     @PostMapping
-    public ResponseEntity<String> createCategory(@RequestBody String name) throws SQLException {
+    public ResponseEntity<HttpStatus> createCategory(@RequestBody String name) throws SQLException {
         categoryService.addCategory(name);
-        //Isto ko i za recipe controller
-        return ResponseEntity.ok("added new category");
+        return ResponseEntity.ok().build();
     }
     @DeleteMapping
-    public ResponseEntity<String> deleteCategory(@RequestBody Category category) throws SQLException{
+    public ResponseEntity<HttpStatus> deleteCategory(@RequestBody Category category) throws SQLException{
         categoryService.removeCategory(category);
-        //Isto ko i za recipe controller
-        return ResponseEntity.ok("removed category");
+        return ResponseEntity.ok().build();
     }
 
 }

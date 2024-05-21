@@ -36,16 +36,12 @@ public class UserService {
         User user = userDao.getUserByUsername(username);
         return userMapper.mapToDetails(user);
     }
-    public int registerUser(UserRegistrationDto userRegistrationDto){
+    public void registerUser(UserRegistrationDto userRegistrationDto){
         if(!userDao.isUsernameTaken(userRegistrationDto.getUsername())){
             if(!userDao.isEmailTaken(userRegistrationDto.getEmail())) {
-                boolean status = userDao.registerUser(userRegistrationDto);
-                if(status){
-                    return 1;
-                }
+                userDao.registerUser(userRegistrationDto);
             }
         }
-        return 0;
     }
     //temporary return value
     public UserDetailsDto loginUser(UserLoginDto userLoginDto){

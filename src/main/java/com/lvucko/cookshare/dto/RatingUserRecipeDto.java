@@ -1,4 +1,4 @@
-package com.lvucko.cookshare.models;
+package com.lvucko.cookshare.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Picture {
+public class RatingUserRecipeDto {
+    private long userId;
     private long recipeId;
-    private String pathToPicture;
 }

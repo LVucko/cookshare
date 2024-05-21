@@ -10,10 +10,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class Comment {
-    //fali private na poljima
-    long id;
-    long userId;
-    long recipeId;
-    String comment;
-    Date time;
+    private long id;
+    private long userId;
+    private long recipeId;
+    private String comment;
+    private Date time;
 }

@@ -1,12 +1,10 @@
 package com.lvucko.cookshare.services;
 
-import com.lvucko.cookshare.dao.CategoryDao;
-import com.lvucko.cookshare.dao.PictureDao;
-import com.lvucko.cookshare.dao.RecipeDao;
-import com.lvucko.cookshare.dao.UserDao;
+import com.lvucko.cookshare.dao.*;
 import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
 import com.lvucko.cookshare.mappers.RecipeMapper;
+import com.lvucko.cookshare.models.Picture;
 import com.lvucko.cookshare.models.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,21 +20,15 @@ public class RecipeService {
     private final UserDao userDao;
     private final PictureDao pictureDao;
     private final CategoryDao categoryDao;
-
+    private final CommentDao commentDao;
+    private final RatingDao ratingDao;
     public List<RecipeDetailsDto> getAllRecipes(){
         List<Recipe> recipes = recipeDao.getAllRecipes();
-        //Ovaj dio imas na 3 mjesta u ovom servisu, mozes ga izdvojiti u posebnu metodu
-        List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
-        for(Recipe recipe : recipes){
-            List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
-            List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
-            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
-        }
-        return recipeDetailsDtos;
+        return getRecipeDetails(recipes);
     }
     public RecipeDetailsDto getRecipeById(long recipeId){
         Recipe recipe = recipeDao.getRecipeById(recipeId);
-        List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
+        List<String> picturesPath = getRecipePathToPictures(recipe.getId());
         List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
         return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories);
     }
@@ -56,7 +48,10 @@ public class RecipeService {
     public void removeRecipe(long recipeId){
         categoryDao.removeRecipeFromAllCategories(recipeId);
         pictureDao.removeRecipeFromPictures(recipeId);
+        commentDao.deleteAllCommentsFromRecipe(recipeId);
+        ratingDao.deleteAllRecipeRatings(recipeId);
         recipeDao.removeRecipe(recipeId);
+
     }
     public void updateRecipe(RecipeDetailsDto recipe){
         pictureDao.removeRecipeFromPictures(recipe.getId());
@@ -72,23 +67,30 @@ public class RecipeService {
         recipeDao.updateRecipe(recipe);
     }
     public List<RecipeDetailsDto> getAllUserRecipes(long userId){
-    List<Recipe> recipes = recipeDao.getAllRecipesFromUser(userId);
-    List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
-        for(Recipe recipe : recipes){
-        List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
-        List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
-        recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
-    }
-        return recipeDetailsDtos;
+        List<Recipe> recipes = recipeDao.getAllRecipesFromUser(userId);
+        return getRecipeDetails(recipes);
+
     }
     public List<RecipeDetailsDto> getMostRecentRecipes(long count){
         List<Recipe> recipes = recipeDao.getLatestRecipes(count);
+        return getRecipeDetails(recipes);
+    }
+    public List<RecipeDetailsDto> getRecipeDetails(List<Recipe> recipes){
         List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
         for(Recipe recipe : recipes){
-            List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());
+            List<String> picturesPath = getRecipePathToPictures(recipe.getId());
             List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
             recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
         }
         return recipeDetailsDtos;
+    }
+
+    public List<String> getRecipePathToPictures(long recipeId){
+        List<Picture> pictures =  pictureDao.getRecipePictures(recipeId);
+        List<String> pathToPictures = new ArrayList<>();
+        for(Picture picture : pictures){
+            pathToPictures.add(picture.getPathToPicture());
+        }
+        return pathToPictures;
     }
 }

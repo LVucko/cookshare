@@ -10,11 +10,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class CommentDetailsDto {
-    //fali private na poljima
-    long id;
-    long userId;
-    long recipeId;
-    String comment;
-    Date time;
-    String username;
+    private long id;
+    private long userId;
+    private long recipeId;
+    private String comment;
+    private Date time;
+    private String username;
 }

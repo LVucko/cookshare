@@ -7,7 +7,9 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Picture {
+public class Rating {
+    private long id;
+    private long userId;
     private long recipeId;
-    private String pathToPicture;
+    private long rating;
 }

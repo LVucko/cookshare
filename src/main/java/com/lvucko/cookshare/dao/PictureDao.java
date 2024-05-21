@@ -20,16 +20,6 @@ public class PictureDao {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Picture.class), recipeId);
     }
 
-    //Ovo pripada u servisu
-    public List<String> getRecipePathToPictures(long recipeId){
-        List<Picture> pictures = getRecipePictures(recipeId);
-        List<String> pathToPictures = new ArrayList<>();
-        for(Picture picture : pictures){
-            pathToPictures.add(picture.getPathToPicture());
-        }
-        return pathToPictures;
-    }
-
     public void addRecipeToPicture(long recipeId, String pathToPicture) {
         String sql = """
                     INSERT INTO pictures (recipeId, pathToPicture) VALUES (?,?)

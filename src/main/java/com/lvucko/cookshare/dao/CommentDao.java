@@ -29,13 +29,13 @@ public class CommentDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Comment.class), userId);
     }
-    public long addNewComment(CommentCreationDto comment){
+    public Long addNewComment(CommentCreationDto comment){
         String sql = """
                     INSERT INTO comments(userId, recipeId, time, comment)
                     VALUES (?, ?, CURRENT_TIMESTAMP, ?)
                     RETURNING id
                     """;
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(1), comment.getUserId(), comment.getRecipeId(), comment.getComment());
+        return jdbcTemplate.queryForObject(sql, Long.class, comment.getUserId(), comment.getRecipeId(), comment.getComment());
     }
     public Comment getCommentById(long id){
         String sql = """

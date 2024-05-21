@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Category {
-    //fali private na poljima
-    long id;
-    String name;
+    private long id;
+    private String name;
 }

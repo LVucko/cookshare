@@ -26,13 +26,13 @@ public class RecipeDao {
                     """;
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Recipe.class), recipeId);
     }
-    public long addNewRecipe(RecipeCreationDto recipe){
+    public Long addNewRecipe(RecipeCreationDto recipe){
         String sql = """
                     INSERT INTO recipes(userId, creationDate, title, shortDescription, longDescription)
                     VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)
                     RETURNING id
                     """;
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(1), recipe.getUserId(), recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription());
+        return jdbcTemplate.queryForObject(sql, Long.class, recipe.getUserId(), recipe.getTitle(), recipe.getShortDescription(), recipe.getLongDescription());
     }
 
     public void removeRecipe(long recipeId) {
