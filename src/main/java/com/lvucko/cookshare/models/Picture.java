@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Picture {
+    //fali private na poljima
     long recipeId;
     String pathToPicture;
 }

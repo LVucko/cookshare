@@ -14,6 +14,7 @@ public class UploadService {
     public String saveFile(MultipartFile file){
         try{
             byte[] bytes = file.getBytes();
+            //mozes putanju parametrizirati, dodas u application.properties i onda ovdje ucitas
             String folder = "C:/Users/lvucko1/Documents/React/cookshare/public/uploads/";
             String shortFolder = "uploads/";
             String filename = UUID.randomUUID() + file.getOriginalFilename();

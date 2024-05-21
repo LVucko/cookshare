@@ -19,6 +19,8 @@ public class PictureDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Picture.class), recipeId);
     }
+
+    //Ovo pripada u servisu
     public List<String> getRecipePathToPictures(long recipeId){
         List<Picture> pictures = getRecipePictures(recipeId);
         List<String> pathToPictures = new ArrayList<>();

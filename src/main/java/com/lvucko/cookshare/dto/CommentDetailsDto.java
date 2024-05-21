@@ -10,6 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class CommentDetailsDto {
+    //fali private na poljima
     long id;
     long userId;
     long recipeId;

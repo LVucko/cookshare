@@ -21,11 +21,13 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<String> createCategory(@RequestBody String name) throws SQLException {
         categoryService.addCategory(name);
+        //Isto ko i za recipe controller
         return ResponseEntity.ok("added new category");
     }
     @DeleteMapping
     public ResponseEntity<String> deleteCategory(@RequestBody Category category) throws SQLException{
         categoryService.removeCategory(category);
+        //Isto ko i za recipe controller
         return ResponseEntity.ok("removed category");
     }
 

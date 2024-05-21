@@ -15,6 +15,10 @@ import java.util.List;
 @RequestMapping("api/comments")
 public class CommentController {
     private final CommentService commentService;
+
+    //Po meni ovo ne pripada tu, komentari ovise o korisniku i receptu, ja bi to bolje prebacio u njihove kontrolere
+    //Onda bi bilo npr /api/recipes/{id}/comments i /api/users/{id}/comments
+    //Ovako po jedno slovo definitivno ne, stavi puni naziv da se zna o cem se radi
     @GetMapping("/r/{id}")
     public ResponseEntity<List<CommentDetailsDto>> getRecipeComments(@PathVariable("id") Long recipeId){
 

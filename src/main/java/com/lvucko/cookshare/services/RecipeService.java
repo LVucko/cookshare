@@ -25,6 +25,7 @@ public class RecipeService {
 
     public List<RecipeDetailsDto> getAllRecipes(){
         List<Recipe> recipes = recipeDao.getAllRecipes();
+        //Ovaj dio imas na 3 mjesta u ovom servisu, mozes ga izdvojiti u posebnu metodu
         List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
         for(Recipe recipe : recipes){
             List<String> picturesPath = pictureDao.getRecipePathToPictures(recipe.getId());

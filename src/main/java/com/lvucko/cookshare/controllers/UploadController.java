@@ -20,6 +20,7 @@ public class UploadController {
         if(file.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No file selected");
         }
+        //Nema smisla vracat putanju, bolje bi bilo vratiti id slike i onda koristiti taj id. Ako bude trebalo obrisati sliku ili preuzeti na primjer sve je lakše s id-em
         return ResponseEntity.ok(uploadService.saveFile(file));
     }
 }
