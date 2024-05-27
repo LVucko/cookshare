@@ -3,7 +3,6 @@ package com.lvucko.cookshare.controllers;
 import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

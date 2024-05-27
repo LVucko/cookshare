@@ -2,7 +2,6 @@ package com.lvucko.cookshare.controllers;
 
 
 import com.lvucko.cookshare.dto.RatingCreationDto;
-import com.lvucko.cookshare.dto.RatingUserRecipeDto;
 import com.lvucko.cookshare.services.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

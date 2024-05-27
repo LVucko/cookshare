@@ -1,6 +1,5 @@
 package com.lvucko.cookshare.exceptions;
 
-import ch.qos.logback.classic.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

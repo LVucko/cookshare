@@ -5,7 +5,6 @@ import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
 import com.lvucko.cookshare.models.Comment;
 import com.lvucko.cookshare.services.CommentService;
-import com.lvucko.cookshare.validators.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

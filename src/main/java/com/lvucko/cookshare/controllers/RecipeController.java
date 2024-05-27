@@ -1,7 +1,6 @@
 package com.lvucko.cookshare.controllers;
 
 import com.lvucko.cookshare.dto.*;
-import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.CommentService;
 import com.lvucko.cookshare.services.RatingService;
 import com.lvucko.cookshare.services.RecipeService;

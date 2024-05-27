@@ -1,6 +1,5 @@
 package com.lvucko.cookshare.dto;
 
-import com.lvucko.cookshare.models.Category;
 import lombok.*;
 
 import java.util.List;

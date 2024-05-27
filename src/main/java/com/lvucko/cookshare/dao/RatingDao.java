@@ -1,6 +1,5 @@
 package com.lvucko.cookshare.dao;
 
-import com.lvucko.cookshare.dto.CommentCreationDto;
 import com.lvucko.cookshare.dto.RatingCreationDto;
 import com.lvucko.cookshare.models.Rating;
 import lombok.RequiredArgsConstructor;
