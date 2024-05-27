@@ -45,13 +45,11 @@ public class RecipeController {
         recipeService.removeRecipe(recipeId);
         return ResponseEntity.ok().build();
     }
-
     @PutMapping
     public ResponseEntity<HttpStatus> updateRecipe(@RequestBody RecipeDetailsDto recipe) throws SQLException{
         recipeService.updateRecipe(recipe);
         return ResponseEntity.ok().build();
     }
-
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentDetailsDto>> getRecipeComments(@PathVariable("id") Long recipeId){
         return ResponseEntity.ok(commentService.getAllRecipeComments(recipeId));
@@ -65,7 +63,6 @@ public class RecipeController {
         commentService.deleteAllCommentsFromRecipe(recipeId);
         return ResponseEntity.ok().build();
     }
-
     @PostMapping("{recipeId}/rating")
     public ResponseEntity<Long> addNewRating(@RequestBody RatingCreationDto rating){
         return ResponseEntity.ok(ratingService.addNewRating(rating));
