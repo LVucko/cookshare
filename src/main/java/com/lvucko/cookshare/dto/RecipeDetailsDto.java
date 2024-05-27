@@ -20,4 +20,5 @@ public class RecipeDetailsDto {
     private String longDescription;
     private List<String> categories;
     private List<String> pathToPictures;
+    private double averageRating;
 }

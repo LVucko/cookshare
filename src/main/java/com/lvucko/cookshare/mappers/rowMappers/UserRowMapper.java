@@ -20,7 +20,7 @@ public class UserRowMapper implements RowMapper<User> {
                     .creationDate(resultSet.getDate("creationDate"))
                     .realName(resultSet.getString("realName"))
                     .phone(resultSet.getString("phone"))
-                    .pathToPicture(resultSet.getString("pathToPicture"))
+                    .pictureId(resultSet.getLong("pictureId"))
                     .build();
         } catch (SQLException exception){
             return null;

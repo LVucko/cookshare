@@ -31,7 +31,7 @@ public class UserController {
     }
     @PostMapping("/register")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody UserRegistrationDto user) throws SQLException{
-
+        userService.registerUser(user);
         return ResponseEntity.ok().build();
     }
     @PostMapping("/login")

@@ -1,11 +1,9 @@
 package com.lvucko.cookshare.controllers;
 
-import com.lvucko.cookshare.dto.CommentCreationDto;
-import com.lvucko.cookshare.dto.CommentDetailsDto;
-import com.lvucko.cookshare.dto.RecipeCreationDto;
-import com.lvucko.cookshare.dto.RecipeDetailsDto;
+import com.lvucko.cookshare.dto.*;
 import com.lvucko.cookshare.models.Category;
 import com.lvucko.cookshare.services.CommentService;
+import com.lvucko.cookshare.services.RatingService;
 import com.lvucko.cookshare.services.RecipeService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +20,7 @@ import java.util.List;
 public class RecipeController {
     private final RecipeService recipeService;
     private final CommentService commentService;
+    private final RatingService ratingService;
     @GetMapping
     public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
         return ResponseEntity.ok(recipeService.getAllRecipes());
@@ -34,7 +33,7 @@ public class RecipeController {
     public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("id") Long recipeId) throws SQLException {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
     }
-    @GetMapping("/userrecipes/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<List<RecipeDetailsDto>> getRecipesFromUser(@PathVariable("id") Long userId) throws SQLException{
         return ResponseEntity.ok(recipeService.getAllUserRecipes(userId));
     }
@@ -66,5 +65,14 @@ public class RecipeController {
     public ResponseEntity<HttpStatus> deleteAllCommentsFromRecipe(@PathVariable("id") long recipeId){
         commentService.deleteAllCommentsFromRecipe(recipeId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{recipeId}/rating")
+    public ResponseEntity<Long> addNewRating(@RequestBody RatingCreationDto rating){
+        return ResponseEntity.ok(ratingService.addNewRating(rating));
+    }
+    @GetMapping("{recipeId}/rating/user/{userId}")
+    public ResponseEntity<Long> getUserRecipeRating(@PathVariable("recipeId") Long recipeId, @PathVariable("userId") Long userId){
+        return ResponseEntity.ok(ratingService.getUserRecipeRating(userId, recipeId));
     }
 }

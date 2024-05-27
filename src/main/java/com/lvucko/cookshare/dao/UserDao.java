@@ -22,6 +22,7 @@ public class UserDao {
                      SELECT * FROM users
                      """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
+
     }
     public User getUserById(long userId){
         String sql = """
@@ -54,13 +55,12 @@ public class UserDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
     }
 
-    public boolean registerUser(UserRegistrationDto user){
+    public void registerUser(UserRegistrationDto user){
         String sql = """
-                    INSERT INTO users (username, email, password, realName, creationDate, phone, pathToPicture)
+                    INSERT INTO users (username, email, password, realName, creationDate, phone, pictureid)
                     VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?);
                     """;
-        int rowsAffected = jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getRealName(), user.getPhone(), user.getPathToPicture());
-        return rowsAffected >= 1;
+        jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getRealName(), user.getPhone(), user.getPictureId());
     }
     public User loginViaUsername(UserLoginDto userLoginDto){
         String sql = """

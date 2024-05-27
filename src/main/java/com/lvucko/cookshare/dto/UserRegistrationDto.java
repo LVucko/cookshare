@@ -19,5 +19,5 @@ public class UserRegistrationDto {
     private String password;
     private String realName;
     private String phone;
-    private String pathToPicture;
+    private Long pictureId;
 }

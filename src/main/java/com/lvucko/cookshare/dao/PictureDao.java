@@ -15,21 +15,36 @@ public class PictureDao {
     private final JdbcTemplate jdbcTemplate;
     public List<Picture> getRecipePictures(long recipeId){
         String sql = """
-                    SELECT * FROM pictures where pictures.recipeId = ?
+                    SELECT pictures.* from pictures
+                    INNER JOIN recipepictures
+                    ON  pictures.id=recipepictures.pictureId
+                    WHERE recipepictures.recipeid = ?
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Picture.class), recipeId);
     }
-
-    public void addRecipeToPicture(long recipeId, String pathToPicture) {
+    public Picture getPicture(long pictureId){
         String sql = """
-                    INSERT INTO pictures (recipeId, pathToPicture) VALUES (?,?)
+                    SELECT * from pictures where pictures.id = ?
                     """;
-        jdbcTemplate.update(sql, recipeId, pathToPicture);
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Picture.class), pictureId);
+    }
+    public Long addNewPicture(String picturePath){
+        String sql = """
+                    INSERT INTO pictures (pathtopicture) VALUES (?)
+                    RETURNING id
+                    """;
+        return jdbcTemplate.queryForObject(sql, Long.class, picturePath);
+    }
+    public void addRecipeToPicture(long recipeId, long pictureId) {
+        String sql = """
+                    INSERT INTO recipePictures (recipeId, pictureId) VALUES (?,?)
+                    """;
+        jdbcTemplate.update(sql, recipeId, pictureId);
     }
 
     public void removeRecipeFromPictures(long recipeId){
         String sql = """
-                    DELETE FROM pictures WHERE recipeId = ?
+                    DELETE FROM recipePictures WHERE recipeId = ?
                     """;
         jdbcTemplate.update(sql, recipeId);
     }

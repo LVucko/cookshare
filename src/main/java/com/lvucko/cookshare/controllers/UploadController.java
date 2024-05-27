@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadController {
     private final UploadService uploadService;
     @PostMapping
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file){
-        if(file.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No file selected");
-        }
+    public ResponseEntity<Long> uploadImage(@RequestParam("file") MultipartFile file){
         return ResponseEntity.ok(uploadService.saveFile(file));
     }
 }

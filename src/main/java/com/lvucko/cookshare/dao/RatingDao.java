@@ -51,10 +51,20 @@ public class RatingDao {
         return jdbcTemplate.queryForObject(sql, Long.class, userId, recipeId);
     }
     public Double getAverageRecipeRating(long recipeId){
+
         String sql = """
                     SELECT AVG(rating) FROM ratings WHERE ratings.recipeId = ?
                     """;
-        return jdbcTemplate.queryForObject(sql, Double.class, recipeId);
+        double averageRating;
+        try {
+            averageRating =  jdbcTemplate.queryForObject(sql, Double.class, recipeId);
+        }
+        catch(Exception e){
+            return -1D;
+        }
+        return averageRating;
+
+
     }
     public Long addNewRating(RatingCreationDto rating){
         String sql = """

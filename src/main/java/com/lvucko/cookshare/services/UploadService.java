@@ -1,6 +1,9 @@
 package com.lvucko.cookshare.services;
 
+import com.lvucko.cookshare.dao.PictureDao;
+import com.lvucko.cookshare.exceptions.FileUploadException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,20 +14,26 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UploadService {
-    public String saveFile(MultipartFile file){
+    private final PictureDao pictureDao;
+    @Value("${imagesPath}")
+    private String folder;
+    @Value("${shortImagesPath}")
+    private String shortFolder;
+
+    public Long saveFile(MultipartFile file){
+        if(file.isEmpty()){
+            throw new FileUploadException("No file selected");
+        }
         try{
             byte[] bytes = file.getBytes();
-            String folder = "C:/Users/lvucko1/Documents/React/cookshare/public/uploads/";
-            String shortFolder = "uploads/";
             String filename = UUID.randomUUID() + file.getOriginalFilename();
             File newFile = new File(folder + filename);
             file.transferTo(newFile);
-            return shortFolder + filename;
+            return pictureDao.addNewPicture(shortFolder + filename);
         }
         catch(IOException e){
-            e.printStackTrace();
+            throw new FileUploadException(e.getMessage());
         }
-        return null;
     }
 
 }

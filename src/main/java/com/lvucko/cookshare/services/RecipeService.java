@@ -24,23 +24,24 @@ public class RecipeService {
     private final RatingDao ratingDao;
     public List<RecipeDetailsDto> getAllRecipes(){
         List<Recipe> recipes = recipeDao.getAllRecipes();
-        return getRecipeDetails(recipes);
+        return getRecipesDetails(recipes);
     }
     public RecipeDetailsDto getRecipeById(long recipeId){
         Recipe recipe = recipeDao.getRecipeById(recipeId);
         List<String> picturesPath = getRecipePathToPictures(recipe.getId());
         List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
-        return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories);
+        double averageRating = ratingDao.getAverageRecipeRating(recipe.getId());
+        return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating);
     }
     public long addNewRecipe(RecipeCreationDto recipe){
         long recipeId = recipeDao.addNewRecipe(recipe);
         List <Long> categoryIds = recipe.getCategories();
-        List <String> pathToPictures = recipe.getPathToPictures();
+        List <Long> pictures = recipe.getPictureIds();
         for(Long categoryId : categoryIds){
             categoryDao.addRecipeToCategory(recipeId, categoryId);
         }
-        for(String pathToPicture : pathToPictures){
-            pictureDao.addRecipeToPicture(recipeId, pathToPicture);
+        for(Long picture : pictures){
+            pictureDao.addRecipeToPicture(recipeId, picture);
         }
         return recipeId;
 
@@ -51,15 +52,11 @@ public class RecipeService {
         commentDao.deleteAllCommentsFromRecipe(recipeId);
         ratingDao.deleteAllRecipeRatings(recipeId);
         recipeDao.removeRecipe(recipeId);
-
     }
     public void updateRecipe(RecipeDetailsDto recipe){
+        //ispraviti da radi (nisam smislio implementaciju jos)
         pictureDao.removeRecipeFromPictures(recipe.getId());
         categoryDao.removeRecipeFromAllCategories(recipe.getId());
-        List <String> pathToPictures = recipe.getPathToPictures();
-        for(String pathToPicture : pathToPictures){
-            pictureDao.addRecipeToPicture(recipe.getId(), pathToPicture);
-        }
         List <String> newCategories = recipe.getCategories();
         for(String category : newCategories){
             categoryDao.addRecipeToCategory(recipe.getId(), category);
@@ -68,19 +65,20 @@ public class RecipeService {
     }
     public List<RecipeDetailsDto> getAllUserRecipes(long userId){
         List<Recipe> recipes = recipeDao.getAllRecipesFromUser(userId);
-        return getRecipeDetails(recipes);
+        return getRecipesDetails(recipes);
 
     }
     public List<RecipeDetailsDto> getMostRecentRecipes(long count){
         List<Recipe> recipes = recipeDao.getLatestRecipes(count);
-        return getRecipeDetails(recipes);
+        return getRecipesDetails(recipes);
     }
-    public List<RecipeDetailsDto> getRecipeDetails(List<Recipe> recipes){
+    public List<RecipeDetailsDto> getRecipesDetails(List<Recipe> recipes){
         List<RecipeDetailsDto> recipeDetailsDtos = new ArrayList<>();
         for(Recipe recipe : recipes){
             List<String> picturesPath = getRecipePathToPictures(recipe.getId());
             List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
-            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories));
+            double averageRating = ratingDao.getAverageRecipeRating(recipe.getId());
+            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating));
         }
         return recipeDetailsDtos;
     }

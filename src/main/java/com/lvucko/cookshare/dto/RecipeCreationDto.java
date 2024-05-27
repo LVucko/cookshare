@@ -16,5 +16,5 @@ public class RecipeCreationDto {
     private String shortDescription;
     private String longDescription;
     private List<Long> categories;
-    private List<String> pathToPictures;
+    private List<Long> pictureIds;
 }

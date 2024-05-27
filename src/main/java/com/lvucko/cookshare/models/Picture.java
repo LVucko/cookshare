@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Picture {
-    private long recipeId;
+    private long id;
     private String pathToPicture;
 }

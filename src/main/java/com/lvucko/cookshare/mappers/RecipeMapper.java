@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 public class RecipeMapper {
-    public RecipeDetailsDto mapToDetails(Recipe recipe, User user, List<String> pathToPicture, List<String> categories){
+    public RecipeDetailsDto mapToDetails(Recipe recipe, User user, List<String> pathToPicture, List<String> categories, double averageRating){
         return RecipeDetailsDto.builder()
                 .id(recipe.getId())
                 .userId(recipe.getUserId())
@@ -20,6 +20,7 @@ public class RecipeMapper {
                 .longDescription(recipe.getLongDescription())
                 .pathToPictures(pathToPicture)
                 .categories(categories)
+                .averageRating(averageRating)
                 .build();
 
     }

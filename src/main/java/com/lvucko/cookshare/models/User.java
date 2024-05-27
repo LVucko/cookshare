@@ -18,6 +18,6 @@ public class User {
     private String realName;
     private Date creationDate;
     private String phone;
-    private String pathToPicture;
+    private Long pictureId;
 
 }
