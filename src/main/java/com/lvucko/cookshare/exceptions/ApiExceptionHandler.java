@@ -1,5 +1,7 @@
 package com.lvucko.cookshare.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -35,7 +37,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, httpStatus);
     }
 
-    @ExceptionHandler(value = {InstanceNotFoundException.class, EmptyResultDataAccessException.class})
+    @ExceptionHandler(value = {InstanceNotFoundException.class, EmptyResultDataAccessException.class, UserNotFoundException.class})
     public ResponseEntity<Object> handleNotFoundExceptions(Exception e){
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
@@ -47,5 +49,35 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-
+    @ExceptionHandler(value = {UserLoginException.class})
+    public ResponseEntity<Object> handleUserLoginException(UserLoginException e){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+    @ExceptionHandler(value = {JwtException.class})
+    public ResponseEntity<Object> handleJwtException(JwtException e){
+        System.out.println("handling JWT exception: ");
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+    @ExceptionHandler(value = {SignatureException.class})
+    public ResponseEntity<Object> handleSignatureException(SignatureException e) {
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+    @ExceptionHandler(value = {ExpiredJwtException.class})
+    public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> HandleAllOtherExceptions(Exception e){
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
 }

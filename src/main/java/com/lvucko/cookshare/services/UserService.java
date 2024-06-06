@@ -5,12 +5,20 @@ import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.UserDetailsDto;
 import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
+import com.lvucko.cookshare.exceptions.UserLoginException;
+import com.lvucko.cookshare.exceptions.UserNotFoundException;
 import com.lvucko.cookshare.exceptions.UserRegistrationException;
 import com.lvucko.cookshare.models.Picture;
+import com.lvucko.cookshare.security.JwtService;
+import com.lvucko.cookshare.security.configs.LoginResponse;
 import com.lvucko.cookshare.validators.UserValidator;
 import lombok.RequiredArgsConstructor;
 import com.lvucko.cookshare.mappers.UserMapper;
 import com.lvucko.cookshare.models.User;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +31,9 @@ public class UserService {
     private final UserDao userDao;
     private final PictureDao pictureDao;
     private final UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     public List<UserDetailsDto> getAllUsers(){
         List<User> users = userDao.getAllUsers();
         List<UserDetailsDto> userDetailsDtos = new ArrayList<>();
@@ -63,17 +74,43 @@ public class UserService {
         if(userDao.isEmailTaken(userRegistrationDto.getEmail())) {
             throw new UserRegistrationException("Email taken");
         }
+        userRegistrationDto.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         userDao.registerUser(userRegistrationDto);
     }
-
-    //temporary return value
-    public UserDetailsDto loginUser(UserLoginDto userLoginDto){
+    public User getUserByUsernameOrEmail(String usernameOrEmail){
         User user;
-        if(userLoginDto.getUserLogin().contains("@")){
-            user = userDao.loginViaEmail(userLoginDto);
+        if(usernameOrEmail.contains("@")){
+            try {user = userDao.getUserByEmail(usernameOrEmail);
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new UserNotFoundException("Unable to find user");
+            }
         }
-        else user = userDao.loginViaUsername(userLoginDto);
-        Picture picture = pictureDao.getPicture(user.getPictureId());
-        return userMapper.mapToDetails(user, picture);
+        else{
+            try {user = userDao.getUserByUsername(usernameOrEmail);
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new UserNotFoundException("Unable to find user");
+            }
+        }
+        return user;
+    }
+
+    public LoginResponse loginUser(UserLoginDto userLoginDto){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userLoginDto.getUserLogin(),
+                        userLoginDto.getPassword()
+                        )
+            );
+        User user = getUserByUsernameOrEmail(userLoginDto.getUserLogin());
+        return LoginResponse.builder()
+                .token(jwtService.generateToken(user))
+                .expiresIn(jwtService.getExpirationTime())
+                .build();
+    }
+
+    public LoginResponse logoutUser(UserLoginDto user) {
+        return null;
     }
 }

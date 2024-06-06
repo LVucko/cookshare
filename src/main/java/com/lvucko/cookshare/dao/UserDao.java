@@ -66,16 +66,12 @@ public class UserDao {
         String sql = """
                   SELECT * FROM users WHERE users.username = ? AND password = ?
                   """;
-        return jdbcTemplate.queryForObject(sql, userRowMapper,  userLoginDto.getUserLogin(), userLoginDto.getPassword());
-        //todo
-        //add exceptions, error handling etc.
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class),  userLoginDto.getUserLogin(), userLoginDto.getPassword());
     }
     public User loginViaEmail(UserLoginDto userLoginDto){
         String sql = """
                   SELECT * FROM users WHERE users.email = ? AND password = ?
                   """;
-        return jdbcTemplate.queryForObject(sql, userRowMapper,  userLoginDto.getUserLogin(), userLoginDto.getPassword());
-        //todo
-        //add exceptions, error handling etc.
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class),  userLoginDto.getUserLogin(), userLoginDto.getPassword());
     }
 }

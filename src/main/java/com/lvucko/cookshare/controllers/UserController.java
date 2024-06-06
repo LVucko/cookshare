@@ -4,6 +4,9 @@ import com.lvucko.cookshare.dto.UserDetailsDto;
 import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
 import com.lvucko.cookshare.models.Comment;
+import com.lvucko.cookshare.models.User;
+import com.lvucko.cookshare.security.JwtService;
+import com.lvucko.cookshare.security.configs.LoginResponse;
 import com.lvucko.cookshare.services.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final CommentService commentService;
+    private final JwtService jwtService;
+
     @GetMapping
     public ResponseEntity<List<UserDetailsDto>> getUsers() throws SQLException {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -34,9 +39,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("/login")
-    public ResponseEntity<UserDetailsDto> loginUser(@RequestBody UserLoginDto user) throws SQLException{
-        //not implemented, temporary like this
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody UserLoginDto user) throws SQLException{
         return ResponseEntity.ok(userService.loginUser(user));
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<LoginResponse> logoutUser(@RequestBody UserLoginDto user) throws SQLException{
+        return ResponseEntity.ok(userService.logoutUser(user));
     }
     @GetMapping("/{id}/comments/")
     public ResponseEntity<List<Comment>> getUserComments(@PathVariable("id") Long userId){

@@ -1,5 +1,6 @@
 package com.lvucko.cookshare.mappers.rowMappers;
 
+import com.lvucko.cookshare.enums.Role;
 import com.lvucko.cookshare.models.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class UserRowMapper implements RowMapper<User> {
                     .realName(resultSet.getString("realName"))
                     .phone(resultSet.getString("phone"))
                     .pictureId(resultSet.getLong("pictureId"))
+                    .role(Role.valueOf(resultSet.getString("role")))
                     .build();
         } catch (SQLException exception){
             return null;
