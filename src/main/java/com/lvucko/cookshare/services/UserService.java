@@ -22,7 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -104,13 +106,12 @@ public class UserService {
                         )
             );
         User user = getUserByUsernameOrEmail(userLoginDto.getUserLogin());
+        Map<String, Object> rawMap = new HashMap<>();
+        rawMap.put("UserId", user.getId());
         return LoginResponse.builder()
-                .token(jwtService.generateToken(user))
+                .token(jwtService.generateToken(rawMap,user))
                 .expiresIn(jwtService.getExpirationTime())
                 .build();
     }
 
-    public LoginResponse logoutUser(UserLoginDto user) {
-        return null;
-    }
 }

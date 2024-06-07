@@ -12,11 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +29,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories").hasAuthority(Role.USER.name())
+                        .requestMatchers(HttpMethod.POST, "/api/upload").permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/recipes").hasAuthority(Role.USER.name())
+                        .requestMatchers(HttpMethod.POST, "/api/recipes/*/comments").hasAuthority(Role.USER.name())
                         .requestMatchers("/api/users")
                         .hasAuthority(Role.ADMIN.toString()).anyRequest()
                         .authenticated())

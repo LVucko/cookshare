@@ -34,6 +34,7 @@ public class RecipeService {
         return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating);
     }
     public long addNewRecipe(RecipeCreationDto recipe){
+
         long recipeId = recipeDao.addNewRecipe(recipe);
         List <Long> categoryIds = recipe.getCategories();
         List <Long> pictures = recipe.getPictureIds();

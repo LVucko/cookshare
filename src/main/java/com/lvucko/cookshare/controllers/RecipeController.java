@@ -1,11 +1,13 @@
 package com.lvucko.cookshare.controllers;
 
 import com.lvucko.cookshare.dto.*;
+import com.lvucko.cookshare.security.JwtService;
 import com.lvucko.cookshare.services.CommentService;
 import com.lvucko.cookshare.services.RatingService;
 import com.lvucko.cookshare.services.RecipeService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final CommentService commentService;
     private final RatingService ratingService;
+    private final JwtService jwtService;
     @GetMapping
     public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
         return ResponseEntity.ok(recipeService.getAllRecipes());
@@ -37,7 +40,8 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllUserRecipes(userId));
     }
     @PostMapping
-    public ResponseEntity<Long> addNewRecipe(@RequestBody RecipeCreationDto recipe) throws SQLException{
+    public ResponseEntity<Long> addNewRecipe(@RequestHeader HttpHeaders headers, @RequestBody RecipeCreationDto recipe) throws SQLException{
+        recipe.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(recipeService.addNewRecipe(recipe));
     }
     @DeleteMapping("/{id}")
@@ -55,7 +59,8 @@ public class RecipeController {
         return ResponseEntity.ok(commentService.getAllRecipeComments(recipeId));
     }
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Long> addComment(@RequestBody CommentCreationDto comment){
+    public ResponseEntity<Long> addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentCreationDto comment){
+        comment.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(commentService.addNewComment(comment));
     }
     @DeleteMapping("/{id}/comments")
@@ -64,7 +69,8 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("{recipeId}/rating")
-    public ResponseEntity<Long> addNewRating(@RequestBody RatingCreationDto rating){
+    public ResponseEntity<Long> addNewRating(@RequestHeader HttpHeaders headers, @RequestBody RatingCreationDto rating){
+        rating.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(ratingService.addNewRating(rating));
     }
     @GetMapping("{recipeId}/rating/user/{userId}")

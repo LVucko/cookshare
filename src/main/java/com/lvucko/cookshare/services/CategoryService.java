@@ -15,6 +15,7 @@ public class CategoryService {
         return categoryDao.getAllCategories();
     }
     public void addCategory(String categoryName){
+
         categoryDao.addNewCategory(categoryName);
     }
     public void removeCategory(Category category){

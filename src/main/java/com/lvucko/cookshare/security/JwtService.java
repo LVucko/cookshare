@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import org.springframework.http.HttpHeaders;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,5 +82,11 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+    public String extractTokenFromHeaders(HttpHeaders headers){
+        String authHeader = headers.getFirst("Authorization");
+        if(authHeader == null)throw new JwtException("Unable to get JWT from header");
+        return authHeader.substring(7);
+    }
+
 
 }
