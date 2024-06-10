@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories").hasAuthority(Role.USER.name())
+                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/upload").permitAll()
                         .requestMatchers(HttpMethod.POST, "api/recipes").hasAuthority(Role.USER.name())
                         .requestMatchers(HttpMethod.POST, "/api/recipes/*/comments").hasAuthority(Role.USER.name())
