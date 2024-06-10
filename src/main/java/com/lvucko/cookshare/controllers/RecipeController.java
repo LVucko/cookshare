@@ -73,8 +73,9 @@ public class RecipeController {
         rating.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(ratingService.addNewRating(rating));
     }
-    @GetMapping("{recipeId}/rating/user/{userId}")
-    public ResponseEntity<Long> getUserRecipeRating(@PathVariable("recipeId") Long recipeId, @PathVariable("userId") Long userId){
+    @GetMapping("{recipeId}/rating")
+    public ResponseEntity<Long> getUserRecipeRating(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
+        Long userId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
         return ResponseEntity.ok(ratingService.getUserRecipeRating(userId, recipeId));
     }
 }

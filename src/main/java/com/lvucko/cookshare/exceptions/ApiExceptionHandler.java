@@ -1,11 +1,14 @@
 package com.lvucko.cookshare.exceptions;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -36,7 +39,6 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-
     @ExceptionHandler(value = {InstanceNotFoundException.class, EmptyResultDataAccessException.class, UserNotFoundException.class})
     public ResponseEntity<Object> handleNotFoundExceptions(Exception e){
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
@@ -55,22 +57,22 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-    @ExceptionHandler(value = {JwtException.class})
-    public ResponseEntity<Object> handleJwtException(JwtException e){
-        System.out.println("handling JWT exception: ");
+    @ExceptionHandler(value = {MalformedJwtException.class, SignatureException.class, ExpiredJwtException.class})
+    public ResponseEntity<Object> handleJwtException(Exception e){
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-    @ExceptionHandler(value = {SignatureException.class})
-    public ResponseEntity<Object> handleSignatureException(SignatureException e) {
+
+    @ExceptionHandler(value = {BadCredentialsException.class})
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e) {
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-    @ExceptionHandler(value = {ExpiredJwtException.class})
-    public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {
-        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+    @ExceptionHandler(value = {AuthenticationServiceException.class})
+    public ResponseEntity<Object> handleAuthenticationServiceException(AuthenticationServiceException e) {
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
@@ -80,4 +82,5 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
+
 }

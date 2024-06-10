@@ -22,21 +22,10 @@ public class ApplicationConfiguration {
     public UserDetailsService userDetailsService(){
         return username -> {
             User user;
-            if(username.contains("@")){
-                try{user = userDao.getUserByEmail(username);
-                }
-                catch(EmptyResultDataAccessException e){
-                    throw new UserNotFoundException("Unable to find user x1 ");
-                }
-            }
-            else{
-                try
-                {user = userDao.getUserByUsername(username);
-                }
-                catch(EmptyResultDataAccessException e){
-                    throw new UserNotFoundException("Unable to find user x2 ");
-                }
-            }
+            if(username.contains("@"))
+                user = userDao.getUserByEmail(username);
+            else
+                user = userDao.getUserByUsername(username);
             return user;
         };
     }
