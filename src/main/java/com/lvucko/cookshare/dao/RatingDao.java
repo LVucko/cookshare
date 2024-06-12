@@ -73,5 +73,13 @@ public class RatingDao {
                     """;
         return jdbcTemplate.queryForObject(sql, Long.class, rating.getUserId(), rating.getRecipeId(), rating.getRating());
     }
+    public void updateRating(RatingCreationDto rating){
+        String sql = """
+                    UPDATE ratings
+                    SET rating = ?
+                    WHERE userid  = ? and recipeid = ?;
+                    """;
+        jdbcTemplate.update(sql, rating.getRating(), rating.getUserId(), rating.getRecipeId());
+    }
 
 }

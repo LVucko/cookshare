@@ -108,6 +108,7 @@ public class UserService {
         User user = getUserByUsernameOrEmail(userLoginDto.getUserLogin());
         Map<String, Object> rawMap = new HashMap<>();
         rawMap.put("UserId", user.getId());
+        rawMap.put("Role", user.getRole().name());
         return LoginResponse.builder()
                 .token(jwtService.generateToken(rawMap,user))
                 .expiresIn(jwtService.getExpirationTime())

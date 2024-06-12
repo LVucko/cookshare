@@ -83,6 +83,14 @@ public class RecipeService {
         }
         return recipeDetailsDtos;
     }
+    public List<RecipeDetailsDto> getBestRecipes(long count){
+        List<Recipe> recipes = recipeDao.getBestRecipes(count);
+        return getRecipesDetails(recipes);
+    }
+    public List<RecipeDetailsDto> getLeastRatedRecipes(long count){
+        List<Recipe> recipes = recipeDao.getLeastRatedRecipes(count);
+        return getRecipesDetails(recipes);
+    }
 
     public List<String> getRecipePathToPictures(long recipeId){
         List<Picture> pictures =  pictureDao.getRecipePictures(recipeId);
@@ -92,4 +100,7 @@ public class RecipeService {
         }
         return pathToPictures;
     }
+
+
+
 }

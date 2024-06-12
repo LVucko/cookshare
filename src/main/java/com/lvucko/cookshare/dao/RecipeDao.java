@@ -57,10 +57,33 @@ public class RecipeDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), userId);
     }
+    public List<Recipe> getBestRecipes(long count){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    left join (select recipeid, AVG(rating) as averageRating FROM ratings GROUP BY recipeid)
+                    on recipeid = recipes.id
+                    order by averagerating desc NULLS LAST LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
+    }
+    public List<Recipe> getLeastRatedRecipes(long count){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    left join (select recipeid, AVG(rating) as averageRating FROM ratings GROUP BY recipeid)
+                    on recipeid = recipes.id
+                    order by averagerating asc NULLS first LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
+    }
+
+
     public List<Recipe> getLatestRecipes(long count){
         String sql = """
                     SELECT * FROM recipes ORDER BY id DESC LIMIT ?
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
     }
+
 }

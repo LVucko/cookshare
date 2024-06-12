@@ -24,4 +24,7 @@ public class RatingService {
             return  -1L;
         }
     }
+    public void updateRating(RatingCreationDto rating){
+        ratingDao.updateRating(rating);
+    }
 }
