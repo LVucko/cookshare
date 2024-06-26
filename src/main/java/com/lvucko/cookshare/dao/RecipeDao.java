@@ -2,6 +2,7 @@ package com.lvucko.cookshare.dao;
 
 import com.lvucko.cookshare.dto.RecipeCreationDto;
 import com.lvucko.cookshare.dto.RecipeDetailsDto;
+import com.lvucko.cookshare.dto.RecipeUpdateDto;
 import com.lvucko.cookshare.models.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -41,7 +42,7 @@ public class RecipeDao {
                     """;
         jdbcTemplate.update(sql, recipeId);
     }
-    public void updateRecipe(RecipeDetailsDto recipe){
+    public void updateRecipe(RecipeUpdateDto recipe){
         String sql = """
                     UPDATE recipes
                     SET title = ?,
@@ -67,6 +68,18 @@ public class RecipeDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
     }
+    public List<Recipe> getBestRecipesByCategory(long count, long categoryId){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    left join (select recipeid, AVG(rating) as averageRating FROM ratings GROUP BY recipeid)
+                    on recipeid = recipes.id
+                    inner join (select recipeid as categoryrecipeid FROM recipecategories WHERE categoryId=?)
+                    on categoryrecipeid = recipes.id
+                    order by averagerating desc NULLS LAST LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), categoryId, count);
+    }
     public List<Recipe> getLeastRatedRecipes(long count){
         String sql = """
                     SELECT recipes.*
@@ -77,13 +90,38 @@ public class RecipeDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
     }
-
-
+    public List<Recipe> getLeastRatedRecipesByCategory(long count, long categoryId){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    left join (select recipeid, AVG(rating) as averageRating FROM ratings GROUP BY recipeid)
+                    on recipeid = recipes.id
+                    inner join (select recipeid as categoryrecipeid FROM recipecategories WHERE categoryId= ? )
+                    on categoryrecipeid = recipes.id
+                    order by averagerating asc NULLS first LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), categoryId, count);
+    }
     public List<Recipe> getLatestRecipes(long count){
         String sql = """
                     SELECT * FROM recipes ORDER BY id DESC LIMIT ?
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), count);
     }
+    public List<Recipe> getLatestRecipesByCategory(long count, long categoryId){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    inner join (select recipeid FROM recipecategories WHERE categoryId = ?)
+                    on recipeid = recipes.id
+                    order by creationdate desc LIMIT ?
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class),categoryId, count);
+    }
+
+
+
+
+
 
 }

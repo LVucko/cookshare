@@ -23,23 +23,11 @@ public class RecipeController {
     private final CommentService commentService;
     private final RatingService ratingService;
     private final JwtService jwtService;
+
     @GetMapping
     public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
         return ResponseEntity.ok(recipeService.getAllRecipes());
     }
-    @GetMapping("/latest/{count}")
-    public ResponseEntity<List<RecipeDetailsDto>> getLatestRecipes(@PathVariable("count") Long recipeCount) throws SQLException {
-        return ResponseEntity.ok(recipeService.getMostRecentRecipes(recipeCount));
-    }
-    @GetMapping("/best/{count}")
-    public ResponseEntity<List<RecipeDetailsDto>> getBestRecipes(@PathVariable("count") Long recipeCount) throws SQLException {
-        return ResponseEntity.ok(recipeService.getBestRecipes(recipeCount));
-    }
-    @GetMapping("/least/{count}")
-    public ResponseEntity<List<RecipeDetailsDto>> getLeastRatedRecipes(@PathVariable("count") Long recipeCount) throws SQLException {
-        return ResponseEntity.ok(recipeService.getLeastRatedRecipes(recipeCount));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("id") Long recipeId) throws SQLException {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
@@ -48,21 +36,38 @@ public class RecipeController {
     public ResponseEntity<List<RecipeDetailsDto>> getRecipesFromUser(@PathVariable("id") Long userId) throws SQLException{
         return ResponseEntity.ok(recipeService.getAllUserRecipes(userId));
     }
+
+    @GetMapping("/latest/{count}/category/{categoryId}")
+    public ResponseEntity<List<RecipeDetailsDto>> getLatestRecipesByCategory(@PathVariable("count") Long recipeCount, @PathVariable("categoryId") Long categoryId) throws SQLException {
+        return ResponseEntity.ok(recipeService.getLatestRecipesByCategory(recipeCount, categoryId));
+    }
+    @GetMapping("/best/{count}/category/{categoryId}")
+    public ResponseEntity<List<RecipeDetailsDto>> getBestRecipesByCategory(@PathVariable("count") Long recipeCount, @PathVariable("categoryId") Long categoryId) throws SQLException {
+        return ResponseEntity.ok(recipeService.getBestRecipesByCategory(recipeCount, categoryId));
+    }
+    @GetMapping("/least/{count}/category/{categoryId}")
+    public ResponseEntity<List<RecipeDetailsDto>> getLeastRatedRecipesByCategory(@PathVariable("count") Long recipeCount, @PathVariable("categoryId") Long categoryId) throws SQLException {
+        return ResponseEntity.ok(recipeService.getLeastRatedRecipesByCategory(recipeCount, categoryId));
+    }
+
     @PostMapping
     public ResponseEntity<Long> addNewRecipe(@RequestHeader HttpHeaders headers, @RequestBody RecipeCreationDto recipe) throws SQLException{
         recipe.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(recipeService.addNewRecipe(recipe));
+    }
+
+    @PutMapping
+    public ResponseEntity<HttpStatus> updateRecipe(@RequestHeader HttpHeaders headers, @RequestBody RecipeUpdateDto recipe) throws SQLException{
+        Long userId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
+        recipeService.updateRecipe(recipe, userId);
+        return ResponseEntity.ok().build();
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> removeRecipe(@PathVariable("id") Long recipeId) throws  SQLException{
         recipeService.removeRecipe(recipeId);
         return ResponseEntity.ok().build();
     }
-    @PutMapping
-    public ResponseEntity<HttpStatus> updateRecipe(@RequestBody RecipeDetailsDto recipe) throws SQLException{
-        recipeService.updateRecipe(recipe);
-        return ResponseEntity.ok().build();
-    }
+
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentDetailsDto>> getRecipeComments(@PathVariable("id") Long recipeId){
         return ResponseEntity.ok(commentService.getAllRecipeComments(recipeId));
@@ -72,21 +77,26 @@ public class RecipeController {
         comment.setUserId(jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
         return ResponseEntity.ok(commentService.addNewComment(comment));
     }
-
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable("id") long commentId){
         commentService.deleteComment(commentId);
         return ResponseEntity.ok().build();
     }
-
     @DeleteMapping("/{id}/comments")
     public ResponseEntity<HttpStatus> deleteAllCommentsFromRecipe(@PathVariable("id") long recipeId){
         commentService.deleteAllCommentsFromRecipe(recipeId);
         return ResponseEntity.ok().build();
     }
+
+
     @GetMapping("{recipeId}/rating/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable("recipeId") Long recipeId){
         return ResponseEntity.ok(ratingService.getAverageRecipeRating(recipeId));
+    }
+    @GetMapping("{recipeId}/rating")
+    public ResponseEntity<Long> getUserRecipeRating(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
+        Long userId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
+        return ResponseEntity.ok(ratingService.getUserRecipeRating(userId, recipeId));
     }
     @PostMapping("{recipeId}/rating")
     public ResponseEntity<Long> addNewRating(@RequestHeader HttpHeaders headers, @RequestBody RatingCreationDto rating){
@@ -99,9 +109,5 @@ public class RecipeController {
         ratingService.updateRating(rating);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("{recipeId}/rating")
-    public ResponseEntity<Long> getUserRecipeRating(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
-        Long userId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
-        return ResponseEntity.ok(ratingService.getUserRecipeRating(userId, recipeId));
-    }
+
 }

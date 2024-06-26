@@ -63,7 +63,12 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
-
+    @ExceptionHandler(value = {UnauthorizedException.class})
+    public ResponseEntity<Object> handleUnauthorizedExceptions(UnauthorizedException e) {
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = new ApiException(e.getMessage(), httpStatus, ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
     @ExceptionHandler(value = {BadCredentialsException.class})
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e) {
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
