@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/recipes").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/api/recipes").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/recipes/*/comments").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").hasAnyAuthority(Role.MODERATOR.name(), Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/recipes/comment/**").hasAnyAuthority(Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers("/api/users").hasAuthority(Role.ADMIN.toString()).anyRequest()
                         .authenticated())

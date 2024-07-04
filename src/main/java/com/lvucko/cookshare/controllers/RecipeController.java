@@ -63,8 +63,9 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> removeRecipe(@PathVariable("id") Long recipeId) throws  SQLException{
-        recipeService.removeRecipe(recipeId);
+    public ResponseEntity<HttpStatus> removeRecipe(@RequestHeader HttpHeaders headers, @PathVariable("id") Long recipeId) throws  SQLException{
+        Long userId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
+        recipeService.removeRecipe(recipeId, userId);
         return ResponseEntity.ok().build();
     }
 

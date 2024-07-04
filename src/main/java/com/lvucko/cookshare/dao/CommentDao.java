@@ -19,7 +19,7 @@ public class CommentDao {
                     select comments.*, users.username
                     from comments
                     left join users on comments.userid = users.id
-                    where comments.recipeid = ?;
+                    where comments.recipeid = ? order by time desc;
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(CommentDetailsDto.class), recipeId);
     }
