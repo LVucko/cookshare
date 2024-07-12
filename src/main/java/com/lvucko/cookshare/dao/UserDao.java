@@ -62,16 +62,14 @@ public class UserDao {
                     """;
         jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getRealName(), user.getPhone(), user.getPictureId());
     }
-    public User loginViaUsername(UserLoginDto userLoginDto){
+
+    public void setUserRole(Long userId, String role){
         String sql = """
-                  SELECT * FROM users WHERE users.username = ? AND password = ?
-                  """;
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class),  userLoginDto.getUserLogin(), userLoginDto.getPassword());
+                    UPDATE users
+                    SET role = ?
+                    WHERE id = ?;
+                    """;
+        jdbcTemplate.update(sql, role, userId);
     }
-    public User loginViaEmail(UserLoginDto userLoginDto){
-        String sql = """
-                  SELECT * FROM users WHERE users.email = ? AND password = ?
-                  """;
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class),  userLoginDto.getUserLogin(), userLoginDto.getPassword());
-    }
+
 }

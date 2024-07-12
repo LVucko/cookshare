@@ -69,11 +69,17 @@ public class CategoryDao {
         jdbcTemplate.update(sql, recipeId);
     }
 
-    public void deleteCategory(Category category){
+    public void deleteCategory(Long categoryId){
         String sql = """
                     DELETE FROM categories WHERE categories.id = ?
                     """;
-        jdbcTemplate.update(sql, category.getId());
+        jdbcTemplate.update(sql, categoryId);
+    }
+    public void removeCategoryFromAllRecipes(Long categoryId){
+        String sql = """
+                    DELETE FROM recipeCategories WHERE categoryid = ?
+                    """;
+        jdbcTemplate.update(sql, categoryId);
     }
 
     public void addNewCategory(String category){

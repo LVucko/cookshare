@@ -24,14 +24,14 @@ public class CategoryController {
     public ResponseEntity<List<Category>> getCategories(@RequestHeader HttpHeaders headers) throws SQLException{
         return ResponseEntity.ok(categoryService.getCategories());
     }
-    @PostMapping
-    public ResponseEntity<HttpStatus> createCategory(@RequestBody String name) throws SQLException {
-        categoryService.addCategory(name);
+    @PostMapping("/{category}")
+    public ResponseEntity<HttpStatus> createCategory(@PathVariable("category") String categoryName) throws SQLException {
+        categoryService.addCategory(categoryName);
         return ResponseEntity.ok().build();
     }
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteCategory(@RequestBody Category category) throws SQLException{
-        categoryService.removeCategory(category);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") Long categoryId) throws SQLException{
+        categoryService.removeCategory(categoryId);
         return ResponseEntity.ok().build();
     }
 

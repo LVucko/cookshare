@@ -47,5 +47,19 @@ public class PictureDao {
                     """;
         jdbcTemplate.update(sql, recipeId);
     }
+    public List<Picture> getAllPictures(){
+        String sql = """
+                    SELECT * FROM pictures ORDER BY id ASC
+                    """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Picture.class));
+    }
+    public void updatePicturePath(Long id, String newPathToPicture){
+        String sql = """
+                    UPDATE pictures
+                    SET pathtopicture  = ?
+                    WHERE id = ?
+                    """;
+        jdbcTemplate.update(sql, newPathToPicture, id);
+    }
 
 }
