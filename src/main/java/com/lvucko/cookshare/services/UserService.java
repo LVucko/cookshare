@@ -5,6 +5,7 @@ import com.lvucko.cookshare.dao.UserDao;
 import com.lvucko.cookshare.dto.UserDetailsDto;
 import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
+import com.lvucko.cookshare.enums.Role;
 import com.lvucko.cookshare.exceptions.UserLoginException;
 import com.lvucko.cookshare.exceptions.UserNotFoundException;
 import com.lvucko.cookshare.exceptions.UserRegistrationException;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.util.EnumUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +61,10 @@ public class UserService {
         User user = userDao.getUserByUsername(username);
         Picture picture = pictureDao.getPicture(user.getPictureId());
         return userMapper.mapToDetails(user, picture);
+    }
+    public void updateUserRole(Long userId, String role){
+        EnumUtils.findEnumInsensitiveCase(Role.class, role);
+        userDao.setUserRole(userId, role);
     }
     public void registerUser(UserRegistrationDto userRegistrationDto){
         if(!UserValidator.isValidEmail(userRegistrationDto.getEmail())){

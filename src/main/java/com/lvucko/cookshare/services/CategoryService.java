@@ -17,7 +17,8 @@ public class CategoryService {
     public void addCategory(String categoryName){
         categoryDao.addNewCategory(categoryName);
     }
-    public void removeCategory(Category category){
-        categoryDao.deleteCategory(category);
+    public void removeCategory(Long categoryId){
+        categoryDao.removeCategoryFromAllRecipes(categoryId);
+        categoryDao.deleteCategory(categoryId);
     }
 }

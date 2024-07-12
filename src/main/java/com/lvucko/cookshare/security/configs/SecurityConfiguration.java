@@ -25,11 +25,16 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/users/*/role/*").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories").hasAnyAuthority(Role.MODERATOR.name(), Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/api/categories").hasAnyAuthority(Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/upload").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/upload").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/recipes").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/api/recipes").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/recipes/*/comments").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())

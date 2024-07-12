@@ -42,13 +42,18 @@ public class UserController {
     public ResponseEntity<LoginResponse> loginUser(@RequestBody UserLoginDto user) throws SQLException{
         return ResponseEntity.ok(userService.loginUser(user));
     }
-    @GetMapping("/{id}/comments/")
+    @GetMapping("/{id}/comments")
     public ResponseEntity<List<Comment>> getUserComments(@PathVariable("id") Long userId){
         return ResponseEntity.ok(commentService.getAllUserComment(userId));
     }
     @DeleteMapping("/{id}/comments")
     public ResponseEntity<HttpStatus> deleteAllCommentsFromUser(@PathVariable("id") long userId){
         commentService.deleteAllCommentsFromUser(userId);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/{id}/role/{role}")
+    public ResponseEntity<HttpStatus> updateUserRole(@PathVariable("id") long userId, @PathVariable("role") String role){
+        userService.updateUserRole(userId, role);
         return ResponseEntity.ok().build();
     }
 }

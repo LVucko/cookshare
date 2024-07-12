@@ -47,5 +47,11 @@ public class PictureDao {
                     """;
         jdbcTemplate.update(sql, recipeId);
     }
+    public List<String> getAllPictures(){
+        String sql = """
+                    SELECT pathtopicture FROM pictures
+                    """;
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 
 }
