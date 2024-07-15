@@ -23,6 +23,10 @@ public class UserRowMapper implements RowMapper<User> {
                     .phone(resultSet.getString("phone"))
                     .pictureId(resultSet.getLong("pictureId"))
                     .role(Role.valueOf(resultSet.getString("role")))
+                    .about(resultSet.getString("about"))
+                    .showRealName(resultSet.getBoolean("showRealName"))
+                    .showPhone(resultSet.getBoolean("showPhone"))
+                    .showEmail(resultSet.getBoolean("showEmail"))
                     .build();
         } catch (SQLException exception){
             return null;

@@ -2,10 +2,9 @@ package com.lvucko.cookshare.services;
 
 import com.lvucko.cookshare.dao.PictureDao;
 import com.lvucko.cookshare.dao.UserDao;
-import com.lvucko.cookshare.dto.UserDetailsDto;
-import com.lvucko.cookshare.dto.UserLoginDto;
-import com.lvucko.cookshare.dto.UserRegistrationDto;
+import com.lvucko.cookshare.dto.*;
 import com.lvucko.cookshare.enums.Role;
+import com.lvucko.cookshare.exceptions.UnauthorizedException;
 import com.lvucko.cookshare.exceptions.UserLoginException;
 import com.lvucko.cookshare.exceptions.UserNotFoundException;
 import com.lvucko.cookshare.exceptions.UserRegistrationException;
@@ -62,10 +61,34 @@ public class UserService {
         Picture picture = pictureDao.getPicture(user.getPictureId());
         return userMapper.mapToDetails(user, picture);
     }
+    public UserPersonalDetailsDto getUserPersonalDetails(Long tokenId, Long userId){
+        User tokenUser = userDao.getUserById(tokenId);
+        if(tokenId.equals(userId) || tokenUser.getRole() == Role.ADMIN || tokenUser.getRole() == Role.MODERATOR){
+            User user = userDao.getUserById(userId);
+            Picture picture = pictureDao.getPicture(user.getPictureId());
+            return userMapper.mapToPersonalDetails(user, picture);
+        }
+        else throw new UnauthorizedException("Unauthorized to delete");
+    }
     public void updateUserRole(Long userId, String role){
         EnumUtils.findEnumInsensitiveCase(Role.class, role);
         userDao.setUserRole(userId, role);
     }
+
+    public void updateUser(Long tokenId, UserUpdateDto userUpdateDto){
+        User user = userDao.getUserById(tokenId);
+        if(user.getId().equals(userUpdateDto.getId()) || user.getRole() == Role.ADMIN || user.getRole() == Role.MODERATOR){
+            if(!UserValidator.isValidEmail(userUpdateDto.getEmail())){
+                throw new UserRegistrationException("Invalid email");
+            }
+            userDao.updateUser(userUpdateDto);
+            if(userUpdateDto.getPictureId() != null){
+                userDao.updateUserPicture(userUpdateDto);
+            }
+        }
+        else throw new UnauthorizedException("Unauthorized to edit");
+    }
+
     public void registerUser(UserRegistrationDto userRegistrationDto){
         if(!UserValidator.isValidEmail(userRegistrationDto.getEmail())){
             throw new UserRegistrationException("Invalid email");

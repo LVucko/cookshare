@@ -26,6 +26,10 @@ public class User implements UserDetails {
     private Date creationDate;
     private String phone;
     private Long pictureId;
+    private String about;
+    private Boolean showRealName;
+    private Boolean showPhone;
+    private Boolean showEmail;
 
     private Role role;
     @Override

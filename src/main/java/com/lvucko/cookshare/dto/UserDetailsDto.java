@@ -16,4 +16,8 @@ public class UserDetailsDto {
     private String username;
     private Date creationDate;
     private String pathToPicture;
+    private String about;
+    private String phone;
+    private String realName;
+    private String email;
 }

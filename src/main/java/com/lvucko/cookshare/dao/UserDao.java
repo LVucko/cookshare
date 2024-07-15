@@ -2,6 +2,7 @@ package com.lvucko.cookshare.dao;
 
 import com.lvucko.cookshare.dto.UserLoginDto;
 import com.lvucko.cookshare.dto.UserRegistrationDto;
+import com.lvucko.cookshare.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import com.lvucko.cookshare.mappers.rowMappers.UserRowMapper;
 import com.lvucko.cookshare.models.User;
@@ -54,11 +55,35 @@ public class UserDao {
                     """;
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
     }
+    public void updateUser(UserUpdateDto user){
+        String sql = """
+                    UPDATE users
+                    SET about = ?,
+                    phone = ?,
+                    realName  = ?,
+                    email = ?,
+                    showRealName = ?,
+                    showPhone = ?,
+                    showEmail = ?
+                    WHERE id = ?;
+                    """;
+        jdbcTemplate.update(sql, user.getAbout(), user.getPhone(), user.getRealName(), user.getEmail(), user.getShowRealName(), user.getShowPhone(), user.getShowEmail(), user.getId());
+    }
+    public void updateUserPicture(UserUpdateDto user){
+        String sql = """
+                    UPDATE users
+                    SET pictureId = ?
+                    WHERE id = ?
+                    """;
+        jdbcTemplate.update(sql, user.getPictureId(), user.getId());
+    }
+
+
 
     public void registerUser(UserRegistrationDto user){
         String sql = """
-                    INSERT INTO users (username, email, password, realName, creationDate, phone, pictureid)
-                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?);
+                    INSERT INTO users (username, email, password, realName, creationDate, phone, pictureid, about)
+                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, '');
                     """;
         jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getRealName(), user.getPhone(), user.getPictureId());
     }

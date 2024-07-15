@@ -27,7 +27,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/users/register").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/users/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/users/personal").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/users").hasAnyAuthority(Role.USER.name(), Role.MODERATOR.name(), Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET,"/api/users/*/comments").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST,"/api/users/*/role/*").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
