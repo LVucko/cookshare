@@ -3,6 +3,7 @@ package com.lvucko.cookshare.controllers;
 import com.lvucko.cookshare.dto.*;
 import com.lvucko.cookshare.security.JwtService;
 import com.lvucko.cookshare.services.CommentService;
+import com.lvucko.cookshare.services.FavouriteService;
 import com.lvucko.cookshare.services.RatingService;
 import com.lvucko.cookshare.services.RecipeService;
 
@@ -23,6 +24,7 @@ public class RecipeController {
     private final CommentService commentService;
     private final RatingService ratingService;
     private final JwtService jwtService;
+    private final FavouriteService favouriteService;
 
     @GetMapping
     public ResponseEntity<List<RecipeDetailsDto>> getRecipes() throws SQLException {
@@ -35,6 +37,10 @@ public class RecipeController {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<RecipeDetailsDto>> getRecipesFromUser(@PathVariable("id") Long userId) throws SQLException{
         return ResponseEntity.ok(recipeService.getAllUserRecipes(userId));
+    }
+    @GetMapping("/user/{id}/favourites")
+    public ResponseEntity<List<RecipeDetailsDto>> getFavouriteRecipesFromUser(@PathVariable("id")Long userId){
+        return  ResponseEntity.ok(recipeService.getUserFavouriteRecipes(userId));
     }
 
     @GetMapping("/latest/{count}/category/{categoryId}")
@@ -89,6 +95,23 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{recipeId}/favourite")
+    public ResponseEntity<Boolean> isRecipeUserFavourite(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
+        Long userId = (jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
+        return ResponseEntity.ok(favouriteService.isFavourite(userId, recipeId));
+    }
+    @PostMapping("/{recipeId}/favourite")
+    public ResponseEntity<HttpStatus> addRecipeToFavourites(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
+        Long userId = (jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
+        favouriteService.addToFavourites(userId, recipeId);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/{recipeId}/favourite")
+    public ResponseEntity<HttpStatus> removeRecipeFromFavourites(@RequestHeader HttpHeaders headers, @PathVariable("recipeId") Long recipeId){
+        Long userId = (jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class)));
+        favouriteService.removeFromFavourites(userId, recipeId);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("{recipeId}/rating/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable("recipeId") Long recipeId){

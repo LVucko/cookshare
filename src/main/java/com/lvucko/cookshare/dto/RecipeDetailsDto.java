@@ -21,4 +21,5 @@ public class RecipeDetailsDto {
     private List<String> categories;
     private List<String> pathToPictures;
     private double averageRating;
+    private Long numberOfFavourites;
 }

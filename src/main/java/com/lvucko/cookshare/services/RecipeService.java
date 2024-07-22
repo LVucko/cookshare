@@ -26,6 +26,7 @@ public class RecipeService {
     private final CategoryDao categoryDao;
     private final CommentDao commentDao;
     private final RatingDao ratingDao;
+    private final FavouriteDao favouriteDao;
 
     public List<String> getRecipePathToPictures(long recipeId){
         List<Picture> pictures =  pictureDao.getRecipePictures(recipeId);
@@ -41,7 +42,8 @@ public class RecipeService {
             List<String> picturesPath = getRecipePathToPictures(recipe.getId());
             List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
             double averageRating = ratingDao.getAverageRecipeRating(recipe.getId());
-            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating));
+            Long numberOfFavourites = favouriteDao.getNumberOfFavourites(recipe.getId());
+            recipeDetailsDtos.add(recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating, numberOfFavourites));
         }
         return recipeDetailsDtos;
     }
@@ -55,7 +57,8 @@ public class RecipeService {
         List<String> picturesPath = getRecipePathToPictures(recipe.getId());
         List<String> categories = categoryDao.getRecipeCategoriesAsString(recipe.getId());
         double averageRating = ratingDao.getAverageRecipeRating(recipe.getId());
-        return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating);
+        Long numberOfFavourites = favouriteDao.getNumberOfFavourites(recipe.getId());
+        return recipeMapper.mapToDetails(recipe, userDao.getUserById(recipe.getUserId()), picturesPath, categories, averageRating, numberOfFavourites);
     }
     public long addNewRecipe(RecipeCreationDto recipe){
         long recipeId = recipeDao.addNewRecipe(recipe);
@@ -77,6 +80,7 @@ public class RecipeService {
             pictureDao.removeRecipeFromPictures(recipeId);
             commentDao.deleteAllCommentsFromRecipe(recipeId);
             ratingDao.deleteAllRecipeRatings(recipeId);
+            favouriteDao.removeAllRecipeFavourites(recipeId);
             recipeDao.removeRecipe(recipeId);
         }
         else throw new UnauthorizedException("Unauthorized to delete");
@@ -137,6 +141,10 @@ public class RecipeService {
         else{
             recipes = recipeDao.getLeastRatedRecipes(count);
         }
+        return getRecipesDetails(recipes);
+    }
+    public List<RecipeDetailsDto> getUserFavouriteRecipes(long userid){
+        List<Recipe> recipes = recipeDao.getFavouriteRecipesFromUser(userid);
         return getRecipesDetails(recipes);
     }
 }

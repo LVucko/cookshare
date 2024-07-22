@@ -118,7 +118,17 @@ public class RecipeDao {
                     """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class),categoryId, count);
     }
-
+    public List<Recipe> getFavouriteRecipesFromUser(Long userId){
+        String sql = """
+                    SELECT recipes.*
+                    from recipes
+                    left join (select recipeid FROM favourites GROUP BY recipeid)
+                    on recipeid = recipes.id
+                    inner join (select recipeid as favouriterecipeid FROM favourites WHERE userid= ? )
+                    on favouriterecipeid = recipes.id
+                """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Recipe.class), userId);
+    }
 
 
 
