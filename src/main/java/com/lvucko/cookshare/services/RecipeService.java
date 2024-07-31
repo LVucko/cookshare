@@ -91,15 +91,17 @@ public class RecipeService {
         if(oldRecipe.getUserId() == userId || user.getRole() == Role.ADMIN || user.getRole() == Role.MODERATOR){
             List <Long> categoryIds = recipe.getCategories();
             List <Long> pictures = recipe.getPictureIds();
-            if(!pictures.isEmpty())
+            if(pictures != null && !pictures.isEmpty()) {
                 pictureDao.removeRecipeFromPictures(recipe.getId());
+                for (Long picture : pictures) {
+                    pictureDao.addRecipeToPicture(recipe.getId(), picture);
+                }
+            }
             categoryDao.removeRecipeFromAllCategories(recipe.getId());
             for(Long categoryId : categoryIds){
                 categoryDao.addRecipeToCategory(recipe.getId(), categoryId);
             }
-            for(Long picture : pictures){
-                pictureDao.addRecipeToPicture(recipe.getId(), picture);
-            }
+
             recipeDao.updateRecipe(recipe);
         }
         else

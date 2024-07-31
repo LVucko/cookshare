@@ -23,7 +23,6 @@ public class UserDao {
                      SELECT * FROM users
                      """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
-
     }
     public User getUserById(long userId){
         String sql = """
@@ -77,8 +76,6 @@ public class UserDao {
                     """;
         jdbcTemplate.update(sql, user.getPictureId(), user.getId());
     }
-
-
 
     public void registerUser(UserRegistrationDto user){
         String sql = """

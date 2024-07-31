@@ -81,6 +81,10 @@ public class UserService {
             if(!UserValidator.isValidEmail(userUpdateDto.getEmail())){
                 throw new UserRegistrationException("Invalid email");
             }
+            if(!(user.getEmail().equals(userUpdateDto.getEmail()))){
+                if(userDao.isEmailTaken(userUpdateDto.getEmail()))
+                    throw new UserRegistrationException("Email taken");
+            }
             userDao.updateUser(userUpdateDto);
             if(userUpdateDto.getPictureId() != null){
                 userDao.updateUserPicture(userUpdateDto);
