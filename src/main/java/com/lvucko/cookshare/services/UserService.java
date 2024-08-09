@@ -77,11 +77,13 @@ public class UserService {
 
     public void updateUser(Long tokenId, UserUpdateDto userUpdateDto){
         User user = userDao.getUserById(tokenId);
+
         if(user.getId().equals(userUpdateDto.getId()) || user.getRole() == Role.ADMIN || user.getRole() == Role.MODERATOR){
             if(!UserValidator.isValidEmail(userUpdateDto.getEmail())){
                 throw new UserRegistrationException("Invalid email");
             }
-            if(!(user.getEmail().equals(userUpdateDto.getEmail()))){
+            User beforeChangeUser = userDao.getUserById(userUpdateDto.getId());
+            if(!(beforeChangeUser.getEmail().equals(userUpdateDto.getEmail()))){
                 if(userDao.isEmailTaken(userUpdateDto.getEmail()))
                     throw new UserRegistrationException("Email taken");
             }
