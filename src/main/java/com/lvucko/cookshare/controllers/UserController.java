@@ -44,6 +44,10 @@ public class UserController {
         Long tokenUserId = jwtService.extractClaim(jwtService.extractTokenFromHeaders(headers), claims -> claims.get("UserId", Long.class));
         return ResponseEntity.ok(userService.getUserPersonalDetails(tokenUserId, userId));
     }
+    @GetMapping("/personal/username/{username}")
+    public ResponseEntity<UserPersonalDetailsDto> getUserPersonalDetailsByUsername(@PathVariable("username") String username) throws SQLException {
+        return ResponseEntity.ok(userService.getUserPersonalDetailsByUsername(username));
+    }
 
     @PostMapping("/register")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody UserRegistrationDto user) throws SQLException{

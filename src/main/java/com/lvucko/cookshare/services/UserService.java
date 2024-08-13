@@ -68,8 +68,15 @@ public class UserService {
             Picture picture = pictureDao.getPicture(user.getPictureId());
             return userMapper.mapToPersonalDetails(user, picture);
         }
-        else throw new UnauthorizedException("Unauthorized to delete");
+        else throw new UnauthorizedException("Unauthorized to access");
     }
+    public UserPersonalDetailsDto getUserPersonalDetailsByUsername(String username){
+        User user = userDao.getUserByUsername(username);
+        Picture picture = pictureDao.getPicture(user.getPictureId());
+        return userMapper.mapToPersonalDetails(user, picture);
+    }
+
+
     public void updateUserRole(Long userId, String role){
         EnumUtils.findEnumInsensitiveCase(Role.class, role);
         userDao.setUserRole(userId, role);
